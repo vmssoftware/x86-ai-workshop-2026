@@ -1,0 +1,370 @@
+<title>x86 Workshop Prerequisites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&display=swap">
+<style>
+/* Layout: one reading column; plan + environment diagrams full width; numbered setup steps with copyable commands */
+:root {
+  --bg: #f3f5f7;
+  --surface: #ffffff;
+  --ink: #17212b;
+  --muted: #56636f;
+  --line: #c9d1d9;
+  --accent: #0e6b6b;
+  --accent-soft: #dcefee;
+  --warn: #9a5a0c;
+  --warn-soft: #fbead2;
+  --zone: #e8ecf0;
+  --code-bg: #eef2f5;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --cond: "IBM Plex Sans Condensed", "IBM Plex Sans", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #11171d; --surface: #19222a; --ink: #e3e9ee; --muted: #97a4b0; --line: #34414d;
+    --accent: #5cc2bf; --accent-soft: #173a3b; --warn: #f0ae57; --warn-soft: #3b2c16;
+    --zone: #151d24; --code-bg: #0d1318;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #11171d; --surface: #19222a; --ink: #e3e9ee; --muted: #97a4b0; --line: #34414d;
+  --accent: #5cc2bf; --accent-soft: #173a3b; --warn: #f0ae57; --warn-soft: #3b2c16;
+  --zone: #151d24; --code-bg: #0d1318;
+}
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 64px; display: grid; gap: 40px; }
+header { display: grid; gap: 10px; max-width: 72ch; }
+.eyebrow { font: 600 12px/1 var(--cond); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+h1 { font: 600 30px/1.2 var(--sans); margin: 0; text-wrap: balance; }
+h2 { font: 600 20px/1.3 var(--sans); margin: 0; text-wrap: balance; }
+h3 { font: 600 13px/1.2 var(--cond); letter-spacing: .1em; text-transform: uppercase; margin: 0; color: var(--muted); }
+p { margin: 0; max-width: 72ch; }
+.lead { color: var(--muted); }
+section { display: grid; gap: 16px; min-width: 0; }
+code { font: 13px var(--mono); background: var(--accent-soft); padding: 1px 5px; border-radius: 3px; }
+
+.note { border: 1.5px solid var(--accent); background: var(--accent-soft); border-radius: 6px; padding: 14px 16px; display: grid; gap: 4px; max-width: 72ch; }
+.note strong { color: var(--accent); font: 600 12px/1.2 var(--cond); letter-spacing: .12em; text-transform: uppercase; }
+
+.diagram { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+.diagram svg { display: block; min-width: 860px; width: 100%; height: auto; }
+svg text { font-family: var(--sans); fill: var(--ink); font-size: 13px; }
+svg .t-muted { fill: var(--muted); }
+svg .t-head { font-family: var(--cond); font-weight: 600; font-size: 12px; letter-spacing: .1em; fill: var(--muted); }
+svg .t-title { font-weight: 600; font-size: 14px; }
+svg .t-accent { fill: var(--accent); font-family: var(--cond); font-weight: 600; font-size: 12px; letter-spacing: .08em; }
+svg .zone { fill: var(--zone); stroke: var(--line); stroke-dasharray: 6 5; }
+svg .box { fill: var(--surface); stroke: var(--line); }
+svg .box-accent { fill: var(--accent-soft); stroke: var(--accent); }
+svg .box-container { fill: var(--bg); stroke: var(--accent); stroke-width: 1.5; }
+svg .box-instr { fill: var(--warn-soft); stroke: var(--warn); }
+svg .arrow { fill: none; stroke: var(--muted); stroke-width: 1.4; }
+svg .arrow-accent { fill: none; stroke: var(--accent); stroke-width: 1.6; }
+svg .head-fill { fill: var(--muted); }
+svg .head-accent { fill: var(--accent); }
+
+.legend { margin: 0; padding-left: 20px; display: grid; gap: 4px; max-width: 80ch; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font: 600 12px/1.3 var(--cond); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--zone); }
+td:first-child { font-weight: 600; white-space: nowrap; }
+.lic td:first-child { white-space: normal; }
+.terms { margin: 0; padding-left: 20px; display: grid; gap: 6px; max-width: 80ch; }
+.fine { font-size: 13px; color: var(--muted); }
+a { color: var(--accent); }
+.req { font-weight: 600; color: var(--accent); }
+
+.steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; counter-reset: step; }
+.steps > li { counter-increment: step; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 4px 12px; }
+.steps > li::before {
+  content: counter(step); grid-row: span 2;
+  width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--accent);
+  color: var(--accent); font: 600 13px/25px var(--mono); text-align: center;
+}
+.steps .what { display: grid; gap: 8px; min-width: 0; }
+.only { font: 600 11px/1 var(--cond); letter-spacing: .1em; text-transform: uppercase; color: var(--warn); background: var(--warn-soft); border-radius: 3px; padding: 3px 6px; justify-self: start; }
+.cmd { position: relative; min-width: 0; margin-top: 10px; }
+.cmd pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 70px 10px 12px; overflow-x: auto; font: 13px/1.55 var(--mono); }
+.cmd .lang { position: absolute; left: 12px; top: -8px; font: 600 10px/1 var(--cond); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); background: var(--bg); padding: 0 4px; }
+.cmd button {
+  position: absolute; right: 8px; top: 8px; font: 500 12px var(--sans); color: var(--accent);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 3px 9px; cursor: pointer;
+}
+.cmd button:hover { border-color: var(--accent); }
+.cmd button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cmt { color: var(--muted); }
+.part { display: grid; gap: 14px; }
+.done { border-top: 1px solid var(--line); padding-top: 16px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Before the workshop · prerequisites</span>
+    <h1>x86 Porting and Modernizing Workshop</h1>
+    <p class="lead">A half-day, hands-on workshop on OpenVMS x86-64. Everything runs in one local container: VMS/XDE (OpenVMS on Linux), VS Code in the browser, and Claude Code as an AI assistant. Every task can be done with or without AI.</p>
+    <div class="note">
+      <strong>Bringing your own laptop?</strong>
+      <p>Prepare it before the workshop with the steps on this page: install and configure WSL2 (Windows only) and Docker. The workshop image itself is handed out on site, by download and on USB sticks.</p>
+    </div>
+  </header>
+
+  <section>
+    <h2>Plan</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 1160 250" role="img" aria-label="Workshop plan: Welcome, Intro, then Tasks A (porting and debugging), B (CI/CD pipeline) and C (Linux and OpenVMS tools) each preceded by 5 to 10 minutes of instructions, then Wrap-up.">
+        <defs>
+          <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="head-fill"/></marker>
+        </defs>
+        <!-- Welcome -->
+        <rect class="box" x="10" y="40" width="150" height="150" rx="6"/>
+        <text class="t-head" x="24" y="64">START</text>
+        <text class="t-title" x="24" y="90">Welcome</text>
+        <text class="t-muted" x="24" y="114">image handed out</text>
+        <text class="t-muted" x="24" y="134">(download or USB)</text>
+        <text class="t-muted" x="24" y="154">and started</text>
+        <!-- Intro -->
+        <rect class="box" x="184" y="40" width="150" height="150" rx="6"/>
+        <text class="t-head" x="198" y="64">INTRO</text>
+        <text class="t-title" x="198" y="90">VMS/XDE at</text>
+        <text class="t-title" x="198" y="110">a glance</text>
+        <text class="t-muted" x="198" y="134">a classic OpenVMS</text>
+        <text class="t-muted" x="198" y="154">program on x86</text>
+        <!-- Tasks -->
+        <g>
+          <rect class="box-instr" x="358" y="10" width="190" height="34" rx="5"/>
+          <text x="372" y="32" class="t-muted">▸ instructions 5–10 min</text>
+          <rect class="box-accent" x="358" y="52" width="190" height="138" rx="6"/>
+          <text class="t-accent" x="372" y="76">TASK A</text>
+          <text class="t-title" x="372" y="100">Porting and debugging</text>
+          <text class="t-muted" x="372" y="124">an Alpha application:</text>
+          <text class="t-muted" x="372" y="144">analyse, fix, build on x86,</text>
+          <text class="t-muted" x="372" y="164">validate against the Alpha</text>
+        </g>
+        <g>
+          <rect class="box-instr" x="572" y="10" width="190" height="34" rx="5"/>
+          <text x="586" y="32" class="t-muted">▸ instructions 5–10 min</text>
+          <rect class="box-accent" x="572" y="52" width="190" height="138" rx="6"/>
+          <text class="t-accent" x="586" y="76">TASK B</text>
+          <text class="t-title" x="586" y="100">CI/CD pipeline</text>
+          <text class="t-muted" x="586" y="124">build, test, measure and</text>
+          <text class="t-muted" x="586" y="144">release an OpenVMS</text>
+          <text class="t-muted" x="586" y="164">product automatically</text>
+        </g>
+        <g>
+          <rect class="box-instr" x="786" y="10" width="190" height="34" rx="5"/>
+          <text x="800" y="32" class="t-muted">▸ instructions 5–10 min</text>
+          <rect class="box-accent" x="786" y="52" width="190" height="138" rx="6"/>
+          <text class="t-accent" x="800" y="76">TASK C</text>
+          <text class="t-title" x="800" y="100">Linux and OpenVMS</text>
+          <text class="t-title" x="800" y="120">tools together</text>
+          <text class="t-muted" x="800" y="144">GNU make builds an</text>
+          <text class="t-muted" x="800" y="164">OpenVMS project</text>
+        </g>
+        <!-- Wrap-up -->
+        <rect class="box" x="1000" y="40" width="150" height="150" rx="6"/>
+        <text class="t-head" x="1014" y="64">END</text>
+        <text class="t-title" x="1014" y="90">Wrap-up</text>
+        <text class="t-muted" x="1014" y="114">questions</text>
+        <text class="t-muted" x="1014" y="134">and feedback</text>
+        <!-- arrows -->
+        <path class="arrow" d="M160 115 H180" marker-end="url(#pa)"/>
+        <path class="arrow" d="M334 115 H354" marker-end="url(#pa)"/>
+        <path class="arrow" d="M548 115 H568" marker-end="url(#pa)"/>
+        <path class="arrow" d="M762 115 H782" marker-end="url(#pa)"/>
+        <path class="arrow" d="M976 115 H996" marker-end="url(#pa)"/>
+        <text class="t-muted" x="358" y="226">Every task: parts, each ending with a checkpoint · done with or without Claude Code</text>
+      </svg>
+    </div>
+  </section>
+
+  <section>
+    <h2>Environment</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 1160 430" role="img" aria-label="Environment: at the workshop the image is handed out by download or USB stick; on the participant laptop Docker runs the workshop container with VS Code, Claude Code and VMS/XDE; the browser reaches it on localhost; only Claude Code goes to the internet.">
+        <defs>
+          <marker id="ea" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="head-fill"/></marker>
+          <marker id="eb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" class="head-accent"/></marker>
+        </defs>
+        <!-- workshop -->
+        <text class="t-head" x="20" y="34">AT THE WORKSHOP</text>
+        <rect class="box" x="20" y="50" width="220" height="80" rx="6"/>
+        <text class="t-title" x="36" y="82">Workshop image</text>
+        <text class="t-muted" x="36" y="106">download or USB stick</text>
+        <!-- browser -->
+        <rect class="box" x="20" y="230" width="220" height="80" rx="6"/>
+        <text class="t-title" x="36" y="262">Browser</text>
+        <text class="t-muted" x="36" y="286">VS Code tab · OpenVMS screen tab</text>
+        <!-- laptop -->
+        <rect class="zone" x="300" y="20" width="840" height="320" rx="8"/>
+        <text class="t-head" x="320" y="46">PARTICIPANT LAPTOP · WINDOWS 11 + WSL2, OR LINUX</text>
+        <rect class="box" x="320" y="62" width="800" height="262" rx="6"/>
+        <text class="t-title" x="338" y="90">Docker</text>
+        <rect class="box-container" x="340" y="104" width="760" height="204" rx="6"/>
+        <text class="t-accent" x="358" y="130">WORKSHOP CONTAINER</text>
+        <rect class="box-accent" x="360" y="146" width="320" height="140" rx="6"/>
+        <text class="t-title" x="378" y="176">VS Code (web)</text>
+        <text class="t-muted" x="378" y="200">editor, terminals, tasks</text>
+        <text class="t-title" x="378" y="234">Claude Code</text>
+        <text class="t-muted" x="378" y="258">AI assistant, optional</text>
+        <rect class="box-accent" x="740" y="146" width="340" height="140" rx="6"/>
+        <text class="t-title" x="758" y="176">VMS/XDE</text>
+        <text class="t-muted" x="758" y="200">OpenVMS x86-64: compilers, DCL,</text>
+        <text class="t-muted" x="758" y="220">build tools, debugger, desktop</text>
+        <text class="t-muted" x="758" y="252">+ tools for the tasks</text>
+        <!-- arrows -->
+        <path class="arrow" d="M240 90 H316" marker-end="url(#ea)"/>
+        <text class="t-muted" x="248" y="80">load once</text>
+        <path class="arrow-accent" d="M240 270 H356" marker-start="url(#eb)" marker-end="url(#eb)"/>
+        <text class="t-muted" x="250" y="260">localhost</text>
+        <path class="arrow-accent" d="M680 216 H736" marker-end="url(#eb)"/>
+        <!-- internet -->
+        <path class="arrow" d="M520 286 V390 H660" marker-end="url(#ea)"/>
+        <rect class="box" x="664" y="366" width="300" height="48" rx="6"/>
+        <text class="t-title" x="680" y="395">Anthropic API · internet</text>
+        <text class="t-muted" x="510" y="394" text-anchor="end">only Claude Code goes online</text>
+      </svg>
+    </div>
+  </section>
+
+  <section>
+    <h2>Requirements</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th></th><th>Required</th><th>Best experience</th></tr></thead>
+        <tbody>
+          <tr><td>CPU</td><td>x86-64: Intel <span class="req">Skylake</span> (6th generation Core, e.g. i3-6100) or newer, AMD <span class="req">Zen 1</span> (e.g. Ryzen 3 1300) or newer. No ARM, no Apple Silicon.</td><td></td></tr>
+          <tr><td>RAM, Windows + WSL2</td><td><span class="req">16 GB</span></td><td>32 GB</td></tr>
+          <tr><td>RAM, Linux</td><td><span class="req">8 GB</span></td><td>16 GB</td></tr>
+          <tr><td>Disk</td><td>10 GB free</td><td></td></tr>
+          <tr><td>Windows</td><td>Windows 11 22H2 or newer (needed for WSL2 mirrored networking), WSL 2.0 or newer, Ubuntu 20.04 or newer in WSL2 (24.04 recommended)</td><td></td></tr>
+          <tr><td>Linux</td><td>64-bit, kernel 5.4 or newer; Ubuntu 20.04 or newer preferred</td><td></td></tr>
+          <tr><td>Docker</td><td>Docker Engine (package <code>docker.io</code>), in Linux or inside WSL2</td><td></td></tr>
+          <tr><td>Browser</td><td>current Firefox, Chrome or Edge</td><td></td></tr>
+          <tr><td>Network</td><td>during the workshop only Claude Code needs the internet (HTTPS)</td><td></td></tr>
+          <tr><td>Ports</td><td><span class="req">8080, 6080, 5910, 6010, 3330</span> free on the laptop (<code>127.0.0.1</code>); check in step 9</td><td></td></tr>
+          <tr><td>Claude Code</td><td>your own Claude account, or a key provided by the organizer (limited number)</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Preparation</h2>
+    <p class="lead">Install and configure the software below. Nothing else needs to be started: the workshop image and its start command are handed out on site.</p>
+
+    <div class="part">
+      <h3>Windows: WSL2 · PowerShell as Administrator</h3>
+      <ol class="steps">
+        <li><div class="what"><p>Install WSL2 with Ubuntu. Reboot when asked, then create your Linux user.</p>
+          <div class="cmd"><span class="lang">PowerShell</span><pre>wsl --install -d Ubuntu-24.04</pre><button type="button">Copy</button></div></div></li>
+        <li><div class="what"><p>Update WSL and check its version: <code>WSL version</code> must be 2.0 or newer.</p>
+          <div class="cmd"><span class="lang">PowerShell</span><pre>wsl --update
+wsl --version</pre><button type="button">Copy</button></div></div></li>
+        <li><div class="what"><p>Configure WSL: create <code>%UserProfile%\.wslconfig</code> with the content below. Leave the memory setting at the WSL default.</p>
+          <div class="cmd"><span class="lang">PowerShell</span><pre>notepad $env:USERPROFILE\.wslconfig</pre><button type="button">Copy</button></div>
+          <div class="cmd"><span class="lang">.wslconfig</span><pre>[wsl2]
+networkingMode=mirrored
+
+[experimental]
+hostAddressLoopback=true</pre><button type="button">Copy</button></div></div></li>
+        <li><div class="what"><p>Allow inbound connections to WSL in the Windows (Hyper-V) firewall.</p>
+          <div class="cmd"><span class="lang">PowerShell</span><pre>Set-NetFirewallHyperVVMSetting -Name '{40E0AC32-46A5-438A-A0B2-2B479E8F2E90}' -DefaultInboundAction Allow</pre><button type="button">Copy</button></div></div></li>
+        <li><div class="what"><p>Restart WSL so the settings take effect.</p>
+          <div class="cmd"><span class="lang">PowerShell</span><pre>wsl --shutdown</pre><button type="button">Copy</button></div></div></li>
+      </ol>
+    </div>
+
+    <div class="part">
+      <h3>Ubuntu · WSL2 terminal, or your Linux</h3>
+      <ol class="steps" start="6" style="counter-reset: step 5">
+        <li><div class="what"><span class="only">WSL with Ubuntu 20.04 or 22.04 only</span>
+          <p>Enable systemd (Ubuntu 24.04 has it already). Then run <code>wsl --shutdown</code> in PowerShell and reopen Ubuntu.</p>
+          <div class="cmd"><span class="lang">bash</span><pre>grep -q '^systemd=true' /etc/wsl.conf 2&gt;/dev/null || printf '[boot]\nsystemd=true\n' | sudo tee -a /etc/wsl.conf</pre><button type="button">Copy</button></div></div></li>
+        <li><div class="what"><p>Install Docker and <code>zstd</code> (for unpacking the workshop image), start Docker, and allow your user to use it. Then log out and in again (WSL: <code>wsl --shutdown</code> in PowerShell, reopen Ubuntu).</p>
+          <div class="cmd"><span class="lang">bash</span><pre>sudo apt-get update
+sudo apt-get install -y docker.io zstd
+sudo systemctl enable --now docker
+sudo usermod -aG docker $USER</pre><button type="button">Copy</button></div></div></li>
+        <li><div class="what"><p>Check the installation.</p>
+          <div class="cmd"><span class="lang">bash</span><pre>docker version              <span class="cmt"># shows both "Client" and "Server"</span>
+wslinfo --networking-mode   <span class="cmt"># WSL only: mirrored</span></pre><button type="button">Copy</button></div></div></li>
+        <li><div class="what"><p>Check that the workshop ports are free: <b>8080, 6080, 5910, 6010, 3330</b> on <code>127.0.0.1</code> must not be used by other programs. Each check must print nothing.</p>
+          <div class="cmd"><span class="lang">bash · Linux or Ubuntu in WSL2</span><pre>ss -ltn | grep -E ':(8080|6080|5910|6010|3330)\b'</pre><button type="button">Copy</button></div>
+          <div class="cmd"><span class="lang">PowerShell · Windows (mirrored networking shares ports with WSL)</span><pre>Get-NetTCPConnection -State Listen -LocalPort 8080,6080,5910,6010,3330 -ErrorAction SilentlyContinue</pre><button type="button">Copy</button></div>
+          <p>If a port is used, find the program and close it, or change its port:</p>
+          <div class="cmd"><span class="lang">bash</span><pre>sudo ss -ltnp | grep -E ':(8080|6080|5910|6010|3330)\b'   <span class="cmt"># program name in users:(...)</span></pre><button type="button">Copy</button></div>
+          <div class="cmd"><span class="lang">PowerShell</span><pre>Get-NetTCPConnection -State Listen -LocalPort 8080,6080,5910,6010,3330 -ErrorAction SilentlyContinue |
+    ForEach-Object { Get-Process -Id $_.OwningProcess } | Select-Object Id, ProcessName, Path</pre><button type="button">Copy</button></div>
+          <p>If a port can't be freed, tell the instructor at the start of the workshop.</p></div></li>
+      </ol>
+    </div>
+
+    <p class="lead">Any Linux user works: inside the workshop container everything runs as its own user (<code>xdews</code>, the OpenVMS user <code>XDEWS</code>), and no host files are used.</p>
+    <p class="done">You're ready. Bring the laptop and its charger to the workshop; the image and the start command are handed out there.</p>
+  </section>
+
+  <section>
+    <h2>Software used in the workshop</h2>
+    <p class="lead">The workshop uses the following software. Their licenses are available at the links below; the complete list is in VS Code on the workshop start page (<b>Third-party notices</b>).</p>
+    <div class="table-wrap">
+      <table class="lic">
+        <thead><tr><th>Software</th><th>From</th><th>License</th></tr></thead>
+        <tbody>
+          <tr><td>VMS/XDE, OpenVMS x86-64, VSI compilers and layered products</td><td>VSI</td><td>VSI property; licenses can't be used outside the workshop</td></tr>
+          <tr><td>Workshop material (tasks, guides, VS Code setup)</td><td>VSI</td><td>VSI property</td></tr>
+          <tr><td>Claude Code (installed from Anthropic at the first start of the container)</td><td>Anthropic</td><td><a href="https://code.claude.com/docs/en/legal-and-compliance">Anthropic legal agreements</a></td></tr>
+          <tr><td>VS Code in the browser (code-server)</td><td>Coder</td><td><a href="https://github.com/coder/code-server/blob/main/LICENSE">MIT</a></td></tr>
+          <tr><td>Gitea, gitea-runner, tea</td><td>Gitea</td><td><a href="https://github.com/go-gitea/gitea/blob/main/LICENSE">MIT</a></td></tr>
+          <tr><td>noVNC (OpenVMS screen in the browser)</td><td>noVNC project</td><td><a href="https://github.com/novnc/noVNC/blob/master/LICENSE.txt">MPL 2.0</a></td></tr>
+          <tr><td>Ubuntu (base of the workshop image, and in WSL2)</td><td>Canonical and contributors</td><td><a href="https://ubuntu.com/legal/intellectual-property-policy">various open-source licenses</a></td></tr>
+          <tr><td>Docker Engine (on your laptop)</td><td>Docker / Moby project</td><td><a href="https://github.com/moby/moby/blob/master/LICENSE">Apache 2.0</a></td></tr>
+          <tr><td>WSL (Windows only)</td><td>Microsoft</td><td><a href="https://github.com/microsoft/WSL/blob/master/LICENSE">MIT</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h3>Claude Code</h3>
+    <p>Claude Code is optional: every task can also be done without it. It is Anthropic's software, used under Anthropic's terms with your own Claude account or a key provided for the workshop. What you type to Claude Code, and the files it reads, are sent to Anthropic, so don't give it confidential data.</p>
+  </section>
+
+  <section>
+    <h2>Terms of use</h2>
+    <ul class="terms">
+      <li>The workshop image, VMS/XDE, OpenVMS, the VSI compilers and layered products and the workshop material are provided by VSI for use in this workshop only. The licenses in the image can't be used outside the workshop.</li>
+      <li>Do not copy, pass on, publish or use them in production. Open-source components remain under their own licenses.</li>
+      <li>Everything is provided "as is", without warranty. You use your own laptop at your own risk.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Trademarks</h3>
+    <p class="fine">VSI, VMS Software, OpenVMS and VMS/XDE are trademarks or registered trademarks of VMS Software, Inc. or its licensors. Claude and Anthropic are trademarks of Anthropic, PBC. Docker is a trademark of Docker, Inc.; Ubuntu of Canonical Ltd.; Windows and Visual Studio Code of Microsoft Corporation. All other names are trademarks of their respective owners.</p>
+  </section>
+</div>
+
+<script>
+document.querySelectorAll('.cmd button').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var pre = btn.parentElement.querySelector('pre');
+    var text = pre.innerText;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+    var select = function () {
+      var r = document.createRange(); r.selectNodeContents(pre);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selected · Ctrl+C';
+      setTimeout(function () { btn.textContent = 'Copy'; }, 2500);
+    };
+    try {
+      navigator.clipboard.writeText(text).then(done, select);
+    } catch (e) { select(); }
+  });
+});
+</script>

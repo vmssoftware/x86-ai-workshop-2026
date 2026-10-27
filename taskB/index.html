@@ -1,0 +1,725 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Task B Lab Guide</title>
+<style>
+/* Layout: corporate lab guide — fixed contents column on the left, one reading column of steps; offline, system fonts only. */
+:root {
+  --bg: #ffffff;
+  --panel: #f4f5f7;
+  --ink: #161b22;
+  --muted: #57606a;
+  --line: #d0d7de;
+  --accent: #0b5cad;
+  --accent-soft: #e7f0fa;
+  --ok: #1a7f37;
+  --ok-soft: #e6f4ea;
+  --note: #8a5a00;
+  --note-soft: #fff4dc;
+  --code-bg: #f6f8fa;
+  --sans: "Segoe UI", "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --mono: "Cascadia Mono", Consolas, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0f1419; --panel: #161c23; --ink: #e6edf3; --muted: #9aa5b1; --line: #30363d;
+    --accent: #6cb6ff; --accent-soft: #14273b; --ok: #56d364; --ok-soft: #12261a;
+    --note: #e3b341; --note-soft: #2b2210; --code-bg: #161b22;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1419; --panel: #161c23; --ink: #e6edf3; --muted: #9aa5b1; --line: #30363d;
+  --accent: #6cb6ff; --accent-soft: #14273b; --ok: #56d364; --ok-soft: #12261a;
+  --note: #e3b341; --note-soft: #2b2210; --code-bg: #161b22;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+a { color: var(--accent); }
+.page { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
+nav.toc {
+  position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+  background: var(--panel); border-right: 1px solid var(--line); padding: 24px 18px;
+}
+.toc .brand { font-weight: 700; font-size: 14px; letter-spacing: .02em; margin-bottom: 4px; }
+.toc .sub { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: block; padding: 6px 10px; border-radius: 4px; color: var(--ink); text-decoration: none; font-size: 14px; }
+.toc a:hover, .toc a:focus-visible { background: var(--accent-soft); outline: none; }
+.toc .num { display: inline-block; width: 34px; color: var(--muted); font-variant-numeric: tabular-nums; }
+main { padding-inline: 40px; padding-block: 32px 80px; max-width: 980px; }
+header.top { border-bottom: 3px solid var(--accent); padding-bottom: 16px; margin-bottom: 28px; }
+header.top .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 600; }
+h1 { font-size: 28px; line-height: 1.25; margin: 6px 0 8px; }
+h2 { font-size: 22px; margin: 48px 0 6px; padding-top: 12px; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
+h3 { font-size: 16px; margin: 26px 0 8px; }
+p { margin: 8px 0; max-width: 75ch; }
+.lead { color: var(--muted); max-width: 75ch; }
+.meta { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 14px 0; font-size: 14px; }
+.meta dt { color: var(--muted); font-weight: 600; }
+.meta dd { margin: 0; }
+ol.steps { padding-left: 0; list-style: none; counter-reset: step; margin: 12px 0; }
+ol.steps > li { counter-increment: step; position: relative; padding-left: 40px; margin: 22px 0; }
+ol.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; display: grid; place-items: center;
+}
+.cmd { margin: 10px 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.cmd .bar { display: flex; justify-content: space-between; align-items: center; background: var(--panel);
+  border-bottom: 1px solid var(--line); padding: 4px 10px; font-size: 12px; color: var(--muted); }
+.cmd .where { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.cmd button { font: 12px var(--sans); border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+  border-radius: 4px; padding: 2px 10px; cursor: pointer; }
+.cmd button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cmd pre { margin: 0; padding: 10px 12px; background: var(--code-bg); overflow-x: auto; font: 13px/1.5 var(--mono); }
+code { font: 13px var(--mono); background: var(--code-bg); padding: 1px 4px; border-radius: 3px; }
+kbd { font: 12px var(--sans); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 6px; background: var(--panel); }
+figure { margin: 12px 0; }
+figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; }
+figure.narrow img { max-width: 320px; }
+figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.shots { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; }
+.shots figure { margin: 0; flex: 0 1 auto; min-width: 0; }
+.shots img { max-height: 190px; width: auto; }
+.shots .arrow { color: var(--muted); font-size: 20px; }
+.callout { border-left: 4px solid var(--note); background: var(--note-soft); padding: 10px 14px; border-radius: 0 4px 4px 0; margin: 14px 0; max-width: 80ch; }
+.callout b { color: var(--note); }
+.opt { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--note); background: var(--note-soft); border: 1px solid var(--note); border-radius: 3px; padding: 0 6px; margin-right: 6px; vertical-align: 1px; }
+.how { font-size: 13px; white-space: nowrap; margin-left: 4px; }
+.how::before { content: "\21A9  "; }
+.check { border: 1px solid var(--ok); background: var(--ok-soft); border-radius: 6px; padding: 12px 16px; margin: 20px 0; max-width: 80ch; }
+.check .t { font-weight: 700; color: var(--ok); }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 12px 0; font-size: 13px; }
+.flow span { border: 1px solid var(--line); background: var(--panel); border-radius: 4px; padding: 3px 9px; font-family: var(--mono); }
+.flow i { color: var(--muted); font-style: normal; }
+table.facts { border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+table.facts td, table.facts th { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+table.facts th { background: var(--panel); }
+@media (max-width: 820px) {
+  .page { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  main { padding-inline: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+<nav class="toc" aria-label="Contents">
+  <div class="brand">x86 Porting and Modernizing Workshop</div>
+  <div class="sub">Task B · CI/CD on VMS/XDE</div>
+  <ol>
+    <li><a href="#start"><span class="num">1</span>Introduction and setup</a></li>
+    <li><a href="#b0"><span class="num">B0</span>Repository to Gitea</a></li>
+    <li><a href="#b1"><span class="num">B1</span>Runner</a></li>
+    <li><a href="#b2a"><span class="num">B2a</span>First pipeline</a></li>
+    <li><a href="#b2b"><span class="num">B2b</span>Build jobs</a></li>
+    <li><a href="#b3"><span class="num">B3</span>Tests</a></li>
+    <li><a href="#b4"><span class="num">B4</span>Release</a></li>
+    <li><a href="#final"><span class="num">F</span>QA run <span class="opt">OPT</span></a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="top">
+  <div class="kicker">Task B</div>
+  <h1>CI/CD for an OpenVMS product</h1>
+  <p class="lead">Put an OpenVMS product under a CI pipeline that builds, tests and releases it on VMS/XDE, with the same tools you can install at your own site.</p>
+</header>
+
+<!-- ============================================================ -->
+<section id="start" aria-labelledby="h-start">
+<h2 id="h-start">1 · Introduction and setup</h2>
+
+<p>Your team maintains <b>ZeroMQ</b>, a messaging library ported to OpenVMS. It is built by hand with <code>@build.com</code> and handed around as a PCSI kit. In this task you put it under CI: every push to the git server builds and tests it on OpenVMS, and a version tag publishes the PCSI kit.</p>
+
+<dl class="meta">
+  <dt>Result</dt><dd>A pipeline that turns a tagged commit into a released PCSI kit, <code>VSI-X86VMS-ZEROMQ-V0401-8A-1.PCSI$COMPRESSED</code>.</dd>
+  <dt>Tools</dt><dd><b>Gitea</b> (git server, pipelines, releases), <b>gitea-runner</b> (runs the pipeline jobs on VMS/XDE), <b>tea</b> (Gitea's command line), <b>git</b>, and <b>xdecli</b> (runs one DCL command on VMS/XDE from bash). All of them are installed and running in your container.</dd>
+  <dt>Repository</dt><dd><code>DKC200:[zeromq]</code>, on Linux <code>/opt/xde/vms_os/V9.2/DKC200/zeromq</code>: the team's existing git repository.</dd>
+</dl>
+
+<p>The pipeline grows by one stage per part:</p>
+<div class="flow" aria-label="Pipeline stages">
+  <span>build</span><i>→</i><span>test</span><i>→</i><span>kit</span><i>→</i><span>release</span>
+</div>
+
+<p>Each part starts from a prepared state and ends with a checkpoint: the result you should see. If you fall behind, the <b>Task B</b> page in VS Code sets the starting state of any part. Claude Code (right pane) can explain a log or a command at any time; nothing in this task requires it.</p>
+
+<p>This task uses Claude Code <b>in the pane</b> on the right, as in Getting started. The terminal alternative: <a href="../start/index.html#g5">Getting started, G5</a>.</p>
+
+<h3>Set up</h3>
+<ol class="steps">
+  <li id="start-1">
+    <p>Open the Task B workspace: in the <b>VMS/XDE Lab</b> side bar, under <b>Workspaces</b>, click <b>Task B: CI/CD pipeline</b>. The window reloads with the task disk <code>DKC200</code>.</p>
+    <figure><img src="img/s1-open-workspace.png" alt="VS Code with the VMS/XDE Lab side bar; the item Task B: CI/CD pipeline under Workspaces is framed." width="1302" height="900"></figure>
+  </li>
+  <li id="start-2">
+    <p><span class="opt">OPTIONAL</span>Look at the <b>CI/CD</b> view in the side bar. Gitea shows <i>running</i>; the runner shows <i>not registered</i> — you register it in part B1.</p>
+    <figure class="narrow"><img src="img/s2-cicd-view.png" alt="The CI/CD view: Gitea web UI running, Runner status: runner not registered." width="300" height="200"></figure>
+    <p>At the top of the side bar, the <b>Task B</b> view summarises the task. <b>Open guide</b> opens this guide; per part, <b>Hint</b> jumps to its section and <b>Set stage</b> puts that part's starting state in place if you need to catch up: the task disk, the Gitea repository and the runner as at the end of the part before. Your own changes in the task are replaced; VMS/XDE keeps running. The repository is new then, so its pipeline runs are numbered from 1 again: where this guide names a run number (<code>runs view … 3</code>, <code>[ci.run_6]</code>), use the number that <code>tea actions runs list --repo xdews/zeromq</code> shows.</p>
+    <figure class="narrow"><img src="img/s2b-taskb-view.png" alt="Task B view: purpose, tools, stages, result, Open guide button and one row per part with Set stage and Hint." width="300" height="370"></figure>
+  </li>
+  <li id="start-3">
+    <p>Open a terminal: in the <b>VMS/XDE</b> view click <b>New bash terminal</b>. It opens as an editor tab in the task disk, <code>/opt/xde/vms_os/V9.2/DKC200</code>. All commands in this guide are typed there unless a step says otherwise. You can keep using the same terminal tab for the following steps, or close it and open a new one the same way at any time; a new terminal starts in the task disk again, so the steps that need another folder begin with their own <code>cd</code>.</p>
+    <figure class="narrow"><img src="img/s3-new-bash.png" alt="The VMS/XDE view with the item New bash terminal framed." width="300" height="182"></figure>
+  </li>
+  <li id="start-4">
+    <p>Connect <code>tea</code> to your Gitea server. <code>tea</code> is Gitea's command-line client: it creates repositories, secrets and releases and shows pipeline runs, so you can do everything from the terminal. This command logs in once and stores an access token for later commands.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea login add --name lab --url http://127.0.0.1:3330 --user xdews --password lab
+tea login default lab</pre></div>
+    <figure><img src="img/s4-tea-login.png" alt="Terminal output: Login as xdews on http://127.0.0.1:3330 successful." width="948" height="200"><figcaption>Expected output: <code>Login as xdews on http://127.0.0.1:3330 successful</code>.</figcaption></figure>
+  </li>
+  <li id="start-5">
+    <p>Tell git who you are. Every commit records an author; without a name and e-mail <code>git commit</code> refuses with <i>Author identity unknown</i>. The values are only labels for this workshop.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>git config --global user.name "Workshop Participant"
+git config --global user.email "participant@workshop.invalid"</pre></div>
+    <figure><img src="img/s4b-git-identity.png" alt="Terminal: git config --global --list shows user.name and user.email." width="948" height="150"></figure>
+  </li>
+  <li id="start-6">
+    <p>Open the Gitea web pages: in the <b>CI/CD</b> view click <b>Gitea web UI</b>. Gitea opens in a new browser tab. Keep it open: you look at pipeline runs and releases there.</p>
+    <figure class="narrow"><img src="img/s5-gitea-web-ui.png" alt="The CI/CD view with the item Gitea web UI framed." width="300" height="172"></figure>
+  </li>
+  <li id="start-7">
+    <p>Sign in to Gitea with user <code>xdews</code> and password <code>lab</code> — the same as for VS Code.</p>
+    <figure><img src="img/s6-gitea-login.png" alt="Gitea Sign In page with fields Username or Email Address and Password." width="1400" height="560"></figure>
+    <figure><img src="img/s7-gitea-home.png" alt="Gitea dashboard after sign-in: There are no repositories yet." width="1400" height="500"><figcaption>After sign-in: no repositories yet.</figcaption></figure>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — the Task B workspace is open, the bash terminal is in <code>DKC200</code>, <code>tea</code> is logged in, git knows your name, and Gitea is open in a browser tab.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="b0" aria-labelledby="h-b0">
+<h2 id="h-b0">B0 · Move the repository to Gitea</h2>
+<p class="lead">The team's repository exists only on this machine. You create an empty repository on the Gitea server and push the existing history there.</p>
+
+<ol class="steps">
+  <li id="b0-1">
+    <p><span class="opt">OPTIONAL</span>Look at the local repository. <code>git log</code> lists its commits; <code>git status --short | wc -l</code> counts uncommitted changes.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>cd zeromq
+git log --oneline; git status --short | wc -l</pre></div>
+    <figure><img src="img/b0-1-local-repo.png" alt="Terminal: one commit ZeroMQ 4.1.8 for OpenVMS on master, 0 changes." width="948" height="160"><figcaption>One commit on <code>master</code>, no uncommitted changes. The same files are <code>DKC200:[zeromq]</code> in OpenVMS.</figcaption></figure>
+  </li>
+  <li id="b0-2">
+    <p>Create an empty repository <code>zeromq</code> on the Gitea server. New repositories have pipelines (Gitea Actions) switched on already.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea repos create --name zeromq</pre></div>
+    <figure><img src="img/b0-2-repo-create.png" alt="Terminal: xdews/zeromq (empty) with repository details." width="948" height="420"><figcaption><code>xdews/zeromq (empty)</code>. The addresses printed with <code>/proxy/3330/</code> are Gitea's internal ones; open the repository from the Gitea tab.</figcaption></figure>
+  </li>
+  <li id="b0-3">
+    <p>Connect the local repository to the server and push it. <code>git remote add</code> records the server address under the name <code>origin</code>; <code>git push -u</code> uploads the history and links your <code>master</code> branch to the server's.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>git remote add origin http://localhost:8080/proxy/3330/xdews/zeromq.git
+git push -u origin master</pre></div>
+    <p>VS Code asks for the Gitea login in a box at the top of the window. Type <code>xdews</code> and press <kbd>Enter</kbd>, then the password <code>lab</code> and <kbd>Enter</kbd>. git remembers the login: later pushes do not ask again.</p>
+    <figure><img src="img/b0-3a-username.png" alt="VS Code input box at the top: Username, Git: http://127.0.0.1:3330." width="1000" height="260"><figcaption>First the username…</figcaption></figure>
+    <figure><img src="img/b0-3b-password.png" alt="VS Code input box at the top: Password, Git: http://xdews@127.0.0.1:3330." width="1000" height="260"><figcaption>…then the password.</figcaption></figure>
+    <figure><img src="img/b0-3-push.png" alt="Terminal: push output ending with branch master set up to track origin/master." width="948" height="330"><figcaption>Expected output ends with <code>branch 'master' set up to track 'origin/master'</code>.</figcaption></figure>
+  </li>
+  <li id="b0-4">
+    <p><span class="opt">OPTIONAL</span>In the Gitea tab, reload the page and open <b>xdews / zeromq</b>: the files and the commit are on the server.</p>
+    <figure><img src="img/b0-4-repo-page.png" alt="Gitea repository page xdews/zeromq with 1 commit, 1 branch and the file list." width="1400" height="760"></figure>
+  </li>
+</ol>
+
+<div class="callout"><b>Why the address works.</b> Gitea's pages reach your browser through VS Code (<code>localhost:8080/proxy/3330/</code>). Inside the container git is set up to send that address straight to Gitea, so the clone link from the Gitea page works in the terminal.</div>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — the repository <code>xdews/zeromq</code> is on Gitea with the commit <i>ZeroMQ 4.1.8 for OpenVMS</i>, and <code>git push</code> reported <code>master -&gt; master</code>.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="b1" aria-labelledby="h-b1">
+<h2 id="h-b1">B1 · Connect VMS/XDE as a CI runner</h2>
+<p class="lead">Gitea stores pipelines but does not run them. A <b>runner</b> fetches the jobs and executes them. Here the runner is <code>gitea-runner</code> in your container, so its jobs can call OpenVMS through <code>xdecli</code>.</p>
+
+<ol class="steps">
+  <li id="b1-1">
+    <p>Write the runner's configuration. It tells <code>gitea-runner</code> which jobs it takes, how many at once, and where job folders go. Open the <b>Explorer</b> (top icon of the activity bar), right-click the folder <b>Runner</b> (<code>/data/runner</code>), choose <b>New File…</b>, name it <code>config.yaml</code>, paste the content below, and save with <kbd>Ctrl</kbd>+<kbd>S</kbd>.</p>
+    <div class="shots" aria-label="Steps: Explorer icon, right-click Runner and New File, file name">
+      <figure><img src="img/b1-1a-explorer-icon.png" alt="1: the Explorer icon at the top of the activity bar, framed." width="360" height="200"><figcaption>1 · Explorer</figcaption></figure>
+      <span class="arrow" aria-hidden="true">→</span>
+      <figure><img src="img/b1-1-menu.png" alt="2: right-click menu on the Runner folder with New File… framed." width="620" height="300"><figcaption>2 · right-click Runner → New File…</figcaption></figure>
+      <span class="arrow" aria-hidden="true">→</span>
+      <figure><img src="img/b1-1-name.png" alt="3: the new file name config.yaml typed in the Explorer, framed." width="420" height="170"><figcaption>3 · name, Enter</figcaption></figure>
+    </div>
+    <div class="cmd"><div class="bar"><span class="where">file · Runner/config.yaml</span><button type="button" data-copy>Copy</button></div>
+<pre>runner:
+  file: .runner          # registration, written by "gitea-runner register"
+  capacity: 1            # one job at a time
+  labels:
+    - "xde:host"         # jobs with "runs-on: xde" run here, directly in the container
+cache:
+  enabled: false
+host:
+  workdir_parent: /opt/xde/vms_os/V9.2/DKC200/ci   # job folders on the DKC disk</pre></div>
+    <figure><img src="img/b1-1-file.png" alt="4: config.yaml pasted and saved in the editor; the file under Runner in the Explorer." width="1302" height="620"><figcaption>4 · paste, <kbd>Ctrl</kbd>+<kbd>S</kbd>.</figcaption></figure>
+    <table class="facts">
+      <tr><th>Setting</th><th>Why</th></tr>
+      <tr><td><code>labels: xde:host</code></td><td>A job with <code>runs-on: xde</code> runs on this runner, directly in the container (<code>host</code>), not in a Docker image.</td></tr>
+      <tr><td><code>capacity: 1</code></td><td>One job at a time. VMS/XDE runs at most 30 OpenVMS processes in total, and jobs share the task disk.</td></tr>
+      <tr><td><code>workdir_parent</code></td><td>The key setting: job folders are created on the task disk, so OpenVMS sees them as <code>DKC200:[ci...]</code>. A folder outside a DKC disk is invisible to OpenVMS.</td></tr>
+    </table>
+    <p>For all options and their defaults, <code>gitea-runner config generate</code> prints a complete annotated file — the usual starting point at your own site.</p>
+  </li>
+  <li id="b1-2">
+    <p>Back in a bash terminal (<b>VMS/XDE Lab</b> icon → <b>New bash terminal</b>), get a registration token for the repository. <a class="how" href="#start-3">how: Setup step 3</a> A runner needs it once, to identify itself to Gitea. The command stores the token in the shell variable <code>TOKEN</code>; <code>jq</code> extracts it from Gitea's JSON answer, so you don't have to copy it by hand.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>TOKEN=$(tea api -X POST /repos/xdews/zeromq/actions/runners/registration-token | jq -r .token)
+echo $TOKEN</pre></div>
+    <figure><img src="img/b1-2-token.png" alt="Terminal: the token is printed, a string of about 40 characters." width="948" height="140"><figcaption><code>echo</code> prints the token: about 40 letters and digits.</figcaption></figure>
+  </li>
+  <li id="b1-3">
+    <p>Register the runner with Gitea, from the runner's folder. <code>--instance</code> is Gitea's address inside the container; <code>--name</code> is how the runner appears in Gitea. The label comes from <code>config.yaml</code>.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>cd /data/runner
+gitea-runner register --config config.yaml --instance http://127.0.0.1:3330 --token "$TOKEN" --name xde --no-interactive</pre></div>
+    <figure><img src="img/b1-3-register.png" alt="Terminal: register output ending with Runner registered successfully." width="948" height="260"><figcaption>Expected: <code>Runner registered successfully</code>. The warning <i>Runner in user-mode</i> means it runs as your normal user, which is intended.</figcaption></figure>
+  </li>
+  <li id="b1-4">
+    <p>Start the runner in the background. <code>nohup … &amp;</code> keeps it running after the command returns and writes its messages to <code>runner.log</code>. On a real server this would be a systemd service; the commands are the same.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>nohup gitea-runner daemon --config config.yaml &gt;runner.log 2&gt;&amp;1 &amp;</pre></div>
+    <figure><img src="img/b1-4-start.png" alt="Terminal: the background job number and process id are printed." width="948" height="120"></figure>
+  </li>
+  <li id="b1-5">
+    <p><span class="opt">OPTIONAL</span>Watch the runner's log: open a second terminal (<b>VMS/XDE → New bash terminal</b>) and follow the log there. <a class="how" href="#start-3">how: Setup step 3</a> Keep this tab: in the next parts it shows each job the runner takes. Closing the tab stops only the viewer, not the runner.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal (second tab)</span><button type="button" data-copy>Copy</button></div>
+<pre>tail -f /data/runner/runner.log</pre></div>
+    <figure><img src="img/b1-5-log.png" alt="Terminal: runner log with Starting runner daemon and declare successfully." width="948" height="200"><figcaption>Expected: <code>runner: xde … declare successfully</code>.</figcaption></figure>
+  </li>
+  <li id="b1-6">
+    <p><span class="opt">OPTIONAL</span>Check the result. In VS Code the <b>CI/CD</b> view now shows <i>runner running</i>. In the Gitea tab, open the repository's <b>Settings → Actions → Runners</b>: the runner <code>xde</code> is <b>Idle</b>, waiting for jobs.</p>
+    <figure class="narrow"><img src="img/b1-6-cicd-running.png" alt="CI/CD view: Runner status runner running, framed." width="300" height="172"></figure>
+    <figure><img src="img/b1-7-runners-page.png" alt="Gitea Runners Management page: runner xde, status Idle, label xde." width="1400" height="520"></figure>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — the runner log shows <i>declare successfully</i>, and the <b>CI/CD</b> view shows <i>runner running</i>.</div>
+</section>
+<!-- ============================================================ -->
+<section id="b2a" aria-labelledby="h-b2a">
+<h2 id="h-b2a">B2a · First pipeline</h2>
+<p class="lead">You add the pipeline file to the repository. From now on every push builds ZeroMQ on OpenVMS, and the pipeline reports whether OpenVMS really succeeded.</p>
+
+<ol class="steps">
+  <li id="b2a-1">
+    <p>Create the pipeline file. Gitea reads pipelines from <code>.gitea/workflows/</code> in the repository. In the <b>Explorer</b>, expand <b>Task</b>, right-click <b>zeromq</b>, choose <b>New File…</b>, type <code>.gitea/workflows/ci.yaml</code> (the folders are created with it), press <kbd>Enter</kbd>, paste and save. <a class="how" href="#b1-1">how: B1 step 1</a></p>
+    <div class="shots">
+      <figure><img src="img/b2a-1-menu.png" alt="Right-click menu on the zeromq folder with New File… framed." width="620" height="300"><figcaption>right-click zeromq → New File…</figcaption></figure>
+      <span class="arrow" aria-hidden="true">→</span>
+      <figure><img src="img/b2a-1-name.png" alt="The path .gitea/workflows/ci.yaml typed in the Explorer, framed." width="420" height="170"><figcaption>path, Enter</figcaption></figure>
+    </div>
+    <div class="cmd"><div class="bar"><span class="where">file · zeromq/.gitea/workflows/ci.yaml</span><button type="button" data-copy>Copy</button></div>
+<pre>name: ci
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  # our own run directory on the task disk (OpenVMS: DKC200:[ci.run_&lt;n&gt;])
+  RUN_DIR: /opt/xde/vms_os/V9.2/DKC200/ci/run_${{ gitea.run_number }}
+
+jobs:
+  build:
+    runs-on: xde
+    steps:
+      - name: checkout
+        run: |
+          rm -rf &quot;$RUN_DIR&quot;
+          git clone --quiet http://127.0.0.1:3330/${{ gitea.repository }}.git &quot;$RUN_DIR&quot;
+          git -C &quot;$RUN_DIR&quot; checkout --quiet ${{ gitea.sha }}
+      - name: build
+        run: |
+          cd &quot;$RUN_DIR&quot;
+          xdecli &quot;@[.ci]run.com @build.com&quot; | tee step.log
+          grep -q &#x27;CI-RESULT=OK&#x27; step.log</pre></div>
+    <table class="facts">
+      <tr><th>Part</th><th>What it does</th></tr>
+      <tr><td><code>on: push, workflow_dispatch</code></td><td>Run on every push, and on demand (used in the final QA run).</td></tr>
+      <tr><td><code>env: RUN_DIR</code></td><td>Our own run folder on the task disk, <code>DKC200:[ci.run_&lt;n&gt;]</code>. The runner deletes its own job folder after each job; this one stays, so later jobs can share it.</td></tr>
+      <tr><td><code>runs-on: xde</code></td><td>Run on the runner you registered in B1.</td></tr>
+      <tr><td><code>checkout</code></td><td>Plain <code>git clone</code> of exactly the pushed commit — no ready-made "actions": they would be downloaded from GitHub.</td></tr>
+      <tr><td><code>build</code></td><td><code>xdecli</code> runs one DCL command on OpenVMS; its default directory is the current Linux directory, the run folder. The command runs the product's own <code>@build.com</code> through the wrapper below.</td></tr>
+    </table>
+    <figure><img src="img/b2a-1-file.png" alt="ci.yaml pasted and saved in the editor; .gitea/workflows/ci.yaml in the Explorer." width="1302" height="620"></figure>
+  </li>
+  <li id="b2a-2">
+    <p>Create the DCL wrapper <code>ci/run.com</code> the same way (right-click <b>zeromq</b> → <b>New File…</b> → <code>ci/run.com</code>). It is needed because <code>xdecli</code> always returns Unix status 0, whatever OpenVMS reports — a failed build would still look green. The wrapper runs the command, reads OpenVMS's own result <code>$STATUS</code>, and prints one line the pipeline step checks:</p>
+    <div class="cmd"><div class="bar"><span class="where">file · zeromq/ci/run.com (DCL)</span><button type="button" data-copy>Copy</button></div>
+<pre>$! [.ci]run.com - run one CI step on OpenVMS and report its real result
+$! usage: @[.ci]run.com @build.com SRC 32   (P1 = command, P2.. = its parameters)
+$ set noon                                 ! go on after an error: we report it
+$ &#x27;p1&#x27; &#x27;p2&#x27; &#x27;p3&#x27; &#x27;p4&#x27; &#x27;p5&#x27; &#x27;p6&#x27; &#x27;p7&#x27;
+$ status = $status                         ! text, e.g. &quot;%X00030001&quot;
+$ severity = f$integer(status) .and. 7     ! 0 warning, 1 success, 2 error, 3 info, 4 fatal
+$ result = &quot;FAIL&quot;
+$ if severity .eq. 0 .or. severity .eq. 1 .or. severity .eq. 3 then result = &quot;OK&quot;
+$ write sys$output &quot;CI-STATUS=&#x27;&#x27;status&#x27; CI-RESULT=&#x27;&#x27;result&#x27;&quot;
+$ exit &#x27;status&#x27;</pre></div>
+    <table class="facts">
+      <tr><th>Line</th><th>Why</th></tr>
+      <tr><td><code>set noon</code></td><td>DCL stops a procedure at the first error by default; the wrapper must go on to report it.</td></tr>
+      <tr><td><code>'p1' 'p2' …</code></td><td>Runs the command given as parameters, e.g. <code>@build.com</code>.</td></tr>
+      <tr><td><code>status = $status</code></td><td>OpenVMS's result, a text like <code>%X00030001</code>.</td></tr>
+      <tr><td><code>f$integer(status) .and. 7</code></td><td>The severity: 0 warning, 1 success, 2 error, 3 information, 4 fatal. Warnings count as OK, as in the product's own build.</td></tr>
+      <tr><td><code>CI-STATUS=… CI-RESULT=OK|FAIL</code></td><td>The line the step looks for with <code>grep -q 'CI-RESULT=OK'</code>.</td></tr>
+    </table>
+    <figure><img src="img/b2a-2-file.png" alt="run.com pasted and saved in the editor; ci/run.com in the Explorer." width="1302" height="620"></figure>
+  </li>
+  <li id="b2a-3">
+    <p>Commit and push. <code>git add</code> selects the two new files, <code>git commit</code> records them, <code>git push</code> sends them to Gitea — which starts the pipeline.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>cd /opt/xde/vms_os/V9.2/DKC200/zeromq
+git add .gitea ci
+git commit -m "Add first CI pipeline"
+git push</pre></div>
+    <figure><img src="img/b2a-3-push.png" alt="Terminal: commit with 2 files changed and push to master." width="948" height="330"></figure>
+  </li>
+  <li id="b2a-4">
+    <p>Watch the run. <code>tea actions runs list</code> shows the runs of the repository (<code>--repo</code> names it, because the local repository's address is the browser one, which <code>tea</code> does not match to its login); the runner's log tab from B1 shows it taking the job. The full build takes about 2 minutes.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea actions runs list --repo xdews/zeromq</pre></div>
+    <figure><img src="img/b2a-4-runs.png" alt="Terminal: tea actions runs list with run 1 Add first CI pipeline, status completed." width="948" height="200"><figcaption>While the pipeline runs, STATUS shows <i>running</i>; afterwards <i>completed</i>.</figcaption></figure>
+    <p>When it has finished, show its result and jobs (<code>runs list</code> shows only whether a run is finished, <code>runs view</code> shows whether it succeeded):</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea actions runs view --repo xdews/zeromq 1</pre></div>
+    <figure><img src="img/b2a-5-run-view.png" alt="Terminal: tea actions runs view 1 with Conclusion success and job build." width="948" height="470"></figure>
+  </li>
+  <li id="b2a-5">
+    <p>Look at the run in the Gitea tab: repository → <b>Actions</b> lists the runs; click the run to see its <b>Summary</b> with the pipeline graph — one box per job. <a class="how" href="#start-6">how: Setup step 6</a> It grows with each part.</p>
+    <figure><img src="img/b2a-6-actions.png" alt="Gitea Actions list with the run Add first CI pipeline, green." width="1400" height="420"></figure>
+    <figure><img src="img/b2a-7-graph.png" alt="Gitea run summary with the pipeline graph: one green box build." width="1400" height="520"><figcaption>Pipeline graph: <code>build</code>.</figcaption></figure>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — <code>tea actions runs view</code> shows run 1 with <i>Conclusion: success</i>, and the graph shows the green job <code>build</code>.</div>
+</section>
+<!-- ============================================================ -->
+<section id="b2b" aria-labelledby="h-b2b">
+<h2 id="h-b2b">B2b · Build jobs</h2>
+<p class="lead">You split the one <code>build</code> job into jobs, one per build stage. The pipeline graph then shows which stage failed, and the slow stages run only when they are needed.</p>
+
+<p>The product's <code>build.com</code> already takes the stage as a parameter (prepared for this task), so each job runs one stage:</p>
+<table class="facts">
+  <tr><th>DCL command</th><th>Builds</th></tr>
+  <tr><td><code>@build.com SRC 32</code></td><td>the libraries and shareable images, 32-bit pointers</td></tr>
+  <tr><td><code>@build.com SRC 64</code></td><td>the same, 64-bit pointers</td></tr>
+  <tr><td><code>@build.com TOOLS</code></td><td>the tool <code>curve_keygen</code> (links against the 32-bit build)</td></tr>
+  <tr><td><code>@build.com KIT</code></td><td>the PCSI kit (needs both <code>SRC</code> builds)</td></tr>
+</table>
+<div class="flow" aria-label="Jobs">
+  <span>checkout</span><i>→</i><span>compile-32</span><i>→</i><span>tools</span><i>→</i><span>kit</span>
+  <i>·</i><span>checkout</span><i>→</i><span>compile-64</span><i>→</i><span>kit</span>
+</div>
+
+<ol class="steps">
+  <li id="b2b-1">
+    <p>Open the pipeline file: in the <b>Explorer</b>, expand <b>Task</b> → <b>zeromq</b> → <b>.gitea/workflows</b> and click <b>ci.yaml</b>. Replace its whole content (<kbd>Ctrl</kbd>+<kbd>A</kbd>, paste) with the version below and save with <kbd>Ctrl</kbd>+<kbd>S</kbd>. <a class="how" href="#b1-1">how: B1 step 1</a></p>
+    <figure><img src="img/b2b-1-open.png" alt="Explorer with ci.yaml under .gitea/workflows framed." width="300" height="202"></figure>
+    <div class="cmd"><div class="bar"><span class="where">file · zeromq/.gitea/workflows/ci.yaml</span><button type="button" data-copy>Copy</button></div>
+<pre>name: ci
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  # our own run directory on the task disk (OpenVMS: DKC200:[ci.run_&lt;n&gt;]), shared by all jobs
+  RUN_DIR: /opt/xde/vms_os/V9.2/DKC200/ci/run_${{ gitea.run_number }}
+
+jobs:
+  checkout:
+    runs-on: xde
+    steps:
+      - name: clone
+        run: |
+          rm -rf &quot;$RUN_DIR&quot;
+          git clone --quiet http://127.0.0.1:3330/${{ gitea.repository }}.git &quot;$RUN_DIR&quot;
+          git -C &quot;$RUN_DIR&quot; checkout --quiet ${{ gitea.sha }}
+
+  compile-32:
+    needs: checkout
+    runs-on: xde
+    steps:
+      - name: build.com SRC 32
+        run: |
+          cd &quot;$RUN_DIR&quot;
+          xdecli &quot;@[.ci]run.com @build.com SRC 32&quot; | tee compile-32.log
+          grep -q &#x27;CI-RESULT=OK&#x27; compile-32.log
+
+  # full build (64-bit, kit) only for tags and manual runs; pushes stay fast
+  compile-64:
+    needs: checkout
+    if: startsWith(gitea.ref, &#x27;refs/tags/&#x27;) || gitea.event_name == &#x27;workflow_dispatch&#x27;
+    runs-on: xde
+    steps:
+      - name: build.com SRC 64
+        run: |
+          cd &quot;$RUN_DIR&quot;
+          xdecli &quot;@[.ci]run.com @build.com SRC 64&quot; | tee compile-64.log
+          grep -q &#x27;CI-RESULT=OK&#x27; compile-64.log
+
+  tools:
+    needs: compile-32
+    runs-on: xde
+    steps:
+      - name: build.com TOOLS
+        run: |
+          cd &quot;$RUN_DIR&quot;
+          xdecli &quot;@[.ci]run.com @build.com TOOLS&quot; | tee tools.log
+          grep -q &#x27;CI-RESULT=OK&#x27; tools.log
+
+  kit:
+    needs: [compile-64, tools]
+    if: startsWith(gitea.ref, &#x27;refs/tags/&#x27;) || gitea.event_name == &#x27;workflow_dispatch&#x27;
+    runs-on: xde
+    steps:
+      - name: build.com KIT
+        run: |
+          cd &quot;$RUN_DIR&quot;
+          xdecli &quot;@[.ci]run.com @build.com KIT&quot; | tee kit.log
+          grep -q &#x27;CI-RESULT=OK&#x27; kit.log</pre></div>
+    <table class="facts">
+      <tr><th>Part</th><th>What it does</th></tr>
+      <tr><td><code>jobs: checkout, compile-32, …</code></td><td>One job per stage. Each job is a box in the pipeline graph and has its own log.</td></tr>
+      <tr><td><code>needs:</code></td><td>The jobs a job waits for. <code>tools</code> links against the 32-bit build, so it waits for <code>compile-32</code>; <code>kit</code> waits for both builds. A job whose <code>needs</code> failed does not run.</td></tr>
+      <tr><td><code>if:</code></td><td>The 64-bit build and the kit run only for tags (<code>refs/tags/…</code>) and manual runs (<code>workflow_dispatch</code>). A push builds and checks the 32-bit code only, and gets its answer sooner.</td></tr>
+      <tr><td><code>RUN_DIR</code> in every job</td><td>All jobs work in the same run folder on the task disk: <code>checkout</code> clones once, the later jobs build in it. This works because all jobs run on the same runner, on the same OpenVMS disk.</td></tr>
+      <tr><td><code>tee compile-32.log</code></td><td>Each stage's output stays in the run folder under its own name, next to the build results.</td></tr>
+    </table>
+    <figure><img src="img/b2b-1-file.png" alt="The new ci.yaml saved in the editor." width="1302" height="620"></figure>
+  </li>
+  <li id="b2b-2">
+    <p>Commit and push. <code>git commit -a</code> records all changed files that git already knows, here <code>ci.yaml</code>, so no <code>git add</code> is needed.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>cd /opt/xde/vms_os/V9.2/DKC200/zeromq
+git commit -am "Split the build into jobs"
+git push</pre></div>
+    <figure><img src="img/b2b-2-push.png" alt="Terminal: commit of ci.yaml and push to master." width="948" height="285"></figure>
+  </li>
+  <li id="b2b-3">
+    <p>When the run has finished (about a minute; <code>tea actions runs list --repo xdews/zeromq</code> shows <i>completed</i>), show its jobs:</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea actions runs view --repo xdews/zeromq 2</pre></div>
+    <figure><img src="img/b2b-3-run-view.png" alt="Terminal: tea actions runs view 2, Conclusion success; jobs checkout, compile-32 and tools ran on runner xde, compile-64 and kit have no runner." width="948" height="560"><figcaption>On a push, <code>compile-64</code> and <code>kit</code> are skipped (their <code>if:</code> is false): <code>tea</code> lists them as <i>completed</i> but with no runner (<code>-</code>) and start time 1970-01-01: they never started. <code>tools</code> takes under a second: one C++ file.</figcaption></figure>
+  </li>
+  <li id="b2b-4">
+    <p>In the Gitea tab, open the run (<b>Actions</b> → the run). <a class="how" href="#b2a-5">how: B2a step 5</a> The graph now shows the jobs and the <code>needs</code> lines between them. Click a job, for example <b>compile-32</b>, to see its log; it ends with the wrapper's <code>CI-RESULT=OK</code> line.</p>
+    <figure><img src="img/b2b-4-graph.png" alt="Gitea run summary: pipeline graph checkout, compile-32, tools green; compile-64 and kit skipped." width="1700" height="600"><figcaption>Pipeline graph: <code>checkout → compile-32 → tools</code> green; <code>compile-64</code> and <code>kit</code> skipped (crossed circle).</figcaption></figure>
+    <figure><img src="img/b2b-5-job-log.png" alt="Gitea job log of compile-32 ending with the framed line CI-STATUS=%X10030001 CI-RESULT=OK." width="1400" height="760"><figcaption>The end of the <code>compile-32</code> log: the wrapper's line.</figcaption></figure>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — run 2 succeeded: <code>checkout</code>, <code>compile-32</code> and <code>tools</code> are green, <code>compile-64</code> and <code>kit</code> skipped.</div>
+</section>
+<!-- ============================================================ -->
+<section id="b3" aria-labelledby="h-b3">
+<h2 id="h-b3">B3 · Tests</h2>
+<p class="lead">You add a <code>test</code> job: after the build, the pipeline builds and runs ZeroMQ's own tests on OpenVMS. A push is green only if the code builds <i>and</i> the tests pass.</p>
+
+<ol class="steps">
+  <li id="b3-1">
+    <p><span class="opt">OPTIONAL</span>Look at the prepared test scripts in <code>zeromq/tests</code>. You do not change them; the job only calls them, so you can skip to the next step. The folder holds about a hundred files, so open the test list with <b>Quick Open</b>: click into the VS Code window first (for example on the Explorer), so that the keys go to VS Code and not to the browser, which would open its Print dialog; then press <kbd>Ctrl</kbd>+<kbd>P</kbd>, type <code>vms_tests.txt</code> and choose the one in <code>zeromq/tests</code> (the others are copies in earlier run folders). The Explorer scrolls to the file; the two <code>.com</code> scripts are in the same folder.</p>
+    <figure><img src="img/b3-1a-quick-open.png" alt="Quick Open with vms_tests.txt typed; the result in zeromq/tests framed." width="1000" height="260"><figcaption><kbd>Ctrl</kbd>+<kbd>P</kbd> → <code>vms_tests.txt</code> → <kbd>Enter</kbd></figcaption></figure>
+    <table class="facts">
+      <tr><th>File</th><th>What it does</th></tr>
+      <tr><td><code>vms_tests.txt</code></td><td>The tests to run, one name per line; <code>!</code> starts a comment. It lists the tests that work on OpenVMS and do not need fixed TCP ports.</td></tr>
+      <tr><td><code>build_tests.com</code></td><td>Compiles and links each listed test against the 32-bit library <code>[-.src]libzmq32.olb</code>; prints <code>N tests built</code>.</td></tr>
+      <tr><td><code>run_tests.com</code></td><td>Runs each test, prints <code>PASS name</code> or <code>FAIL name</code> and the summary <code>N passed, M failed</code>; each test's own output goes to <code>name.log</code>. It exits with an error status if any test failed, so <code>run.com</code> reports <code>CI-RESULT=FAIL</code>.</td></tr>
+    </table>
+    <figure><img src="img/b3-1-tests.png" alt="vms_tests.txt open in the editor; the file framed in the Explorer under zeromq/tests." width="1302" height="620"></figure>
+  </li>
+  <li id="b3-2">
+    <p>Add the test job: open <code>.gitea/workflows/ci.yaml</code> as in B2b, <a class="how" href="#b2b-1">how: B2b step 1</a> go to the end of the file (<kbd>Ctrl</kbd>+<kbd>End</kbd>), paste the block below and save. Keep its two-space indent: <code>test:</code> belongs under <code>jobs:</code>, like <code>kit:</code> above it.</p>
+    <div class="cmd"><div class="bar"><span class="where">file · zeromq/.gitea/workflows/ci.yaml (add at the end)</span><button type="button" data-copy>Copy</button></div>
+<pre>  test:
+    needs: tools
+    runs-on: xde
+    steps:
+      - name: build tests
+        run: |
+          cd &quot;$RUN_DIR&quot;
+          xdecli &quot;@[.ci]run.com @[.tests]build_tests.com&quot; | tee build-tests.log
+          grep -q &#x27;CI-RESULT=OK&#x27; build-tests.log
+      - name: run tests
+        run: |
+          cd &quot;$RUN_DIR&quot;
+          xdecli &quot;@[.ci]run.com @[.tests]run_tests.com&quot; | tee run-tests.log
+          grep -q &#x27;CI-RESULT=OK&#x27; run-tests.log</pre></div>
+    <table class="facts">
+      <tr><th>Part</th><th>What it does</th></tr>
+      <tr><td><code>needs: tools</code></td><td>The tests run after the whole 32-bit build. They run on every push, unlike the 64-bit build and the kit.</td></tr>
+      <tr><td>two <code>steps</code></td><td>Building and running the tests are separate steps, so the log shows which of them failed. A step runs only if the steps before it succeeded.</td></tr>
+      <tr><td><code>@[.ci]run.com @[.tests]…</code></td><td>The same wrapper as for the build: the test scripts' OpenVMS status becomes the step's result.</td></tr>
+    </table>
+    <figure><img src="img/b3-2-file.png" alt="ci.yaml in the editor with the test job added at the end, under kit." width="1302" height="795"></figure>
+  </li>
+  <li id="b3-3">
+    <p>Commit and push:</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>cd /opt/xde/vms_os/V9.2/DKC200/zeromq
+git commit -am "Add the test job"
+git push</pre></div>
+    <figure><img src="img/b3-3-push.png" alt="Terminal: commit of ci.yaml and push to master." width="948" height="285"></figure>
+  </li>
+  <li id="b3-4">
+    <p>When the run has finished (a little over a minute: the tests build in about 10 seconds and run in about one), show its jobs:</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea actions runs view --repo xdews/zeromq 3</pre></div>
+    <figure><img src="img/b3-4-run-view.png" alt="Terminal: tea actions runs view 3, Conclusion success, with the job test." width="948" height="580"></figure>
+  </li>
+  <li id="b3-5">
+    <p>In the Gitea tab, open the run: the graph has the new box <code>test</code> after <code>tools</code>. <a class="how" href="#b2a-5">how: B2a step 5</a> Click <b>test</b> and the step <b>run tests</b>: one <code>PASS</code> line per test and the summary at the end.</p>
+    <figure><img src="img/b3-5-graph.png" alt="Gitea pipeline graph with checkout, compile-32, tools and test green; compile-64 and kit skipped." width="1700" height="600"><figcaption>Pipeline graph: <code>checkout → compile-32 → tools → test</code>.</figcaption></figure>
+    <figure><img src="img/b3-6-test-log.png" alt="Gitea log of the step run tests: PASS lines and the framed summary 10 passed, 0 failed." width="1400" height="760"><figcaption>The test log: <code>10 passed, 0 failed</code>.</figcaption></figure>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — run 3 succeeded, and the log of the job <code>test</code> ends with <code>10 passed, 0 failed</code>.</div>
+</section>
+<!-- ============================================================ -->
+<section id="b4" aria-labelledby="h-b4">
+<h2 id="h-b4">B4 · Release</h2>
+<p class="lead">You add a <code>release</code> job. When you push a version tag, the pipeline runs every job, including the 64-bit build and the PCSI kit, and publishes the kit as a Gitea release. A push without a tag works as before.</p>
+
+<ol class="steps">
+  <li id="b4-1">
+    <p>Give the release job a token. Creating a release needs a Gitea login, and a pipeline must not contain a password. So you create an access token and store it as a repository <b>secret</b>: Gitea hands it to the job and hides it in the logs. The command asks Gitea for a new token (<code>curl</code> with your login), extracts it (<code>jq</code>) and pipes it straight into the secret (<code>--stdin</code>), so the token never appears on the screen. The second command lists the repository's secrets: names only, never values.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>curl -s -u xdews:lab -H 'Content-Type: application/json' \
+  -d '{"name":"release","scopes":["write:repository","read:user"]}' \
+  http://127.0.0.1:3330/api/v1/users/xdews/tokens \
+  | jq -r .sha1 \
+  | tea actions secrets create --repo xdews/zeromq --stdin RELEASE_TOKEN
+tea actions secrets list --repo xdews/zeromq</pre></div>
+    <table class="facts">
+      <tr><th>Part</th><th>Why</th></tr>
+      <tr><td><code>"scopes"</code></td><td>What the token may do: <code>write:repository</code> to create the release and upload the kit, <code>read:user</code> for <code>tea</code> to check the login. Nothing more.</td></tr>
+      <tr><td><code>.sha1</code></td><td>The field of Gitea's answer that holds the token. Gitea shows it only once, at creation.</td></tr>
+    </table>
+    <figure><img src="img/b4-1-secret.png" alt="Terminal: the token command and tea actions secrets list showing RELEASE_TOKEN." width="948" height="300"></figure>
+  </li>
+  <li id="b4-2">
+    <p>Add the release job at the end of <code>.gitea/workflows/ci.yaml</code>, as in B3 <a class="how" href="#b3-2">how: B3 step 2</a> (<kbd>Ctrl</kbd>+<kbd>End</kbd>, paste, save):</p>
+    <div class="cmd"><div class="bar"><span class="where">file · zeromq/.gitea/workflows/ci.yaml (add at the end)</span><button type="button" data-copy>Copy</button></div>
+<pre>  release:
+    needs: [test, kit]
+    if: startsWith(gitea.ref, &#x27;refs/tags/v&#x27;)
+    runs-on: xde
+    steps:
+      - name: publish the kit
+        run: |
+          cd &quot;$RUN_DIR&quot;
+          # VMS file names: match case-insensitively
+          kit=$(find . -maxdepth 1 -iname &#x27;*.pcsi$compressed&#x27; | head -1)
+          # own tea login, apart from yours (the runner runs as your user);
+          # removed after the step, as it holds the token
+          export XDG_CONFIG_HOME=$(mktemp -d)
+          trap &#x27;rm -rf &quot;$XDG_CONFIG_HOME&quot;&#x27; EXIT
+          tea login add --name ci --url http://127.0.0.1:3330 \
+              --token &quot;${{ secrets.RELEASE_TOKEN }}&quot; &gt;/dev/null
+          tea releases create --login ci --repo ${{ gitea.repository }} \
+              --tag &quot;${{ gitea.ref_name }}&quot; --title &quot;ZeroMQ ${{ gitea.ref_name }}&quot; \
+              --asset &quot;$kit&quot;</pre></div>
+    <table class="facts">
+      <tr><th>Part</th><th>What it does</th></tr>
+      <tr><td><code>needs: [test, kit]</code></td><td>Publish only a kit whose code passed the tests.</td></tr>
+      <tr><td><code>if: startsWith(gitea.ref, 'refs/tags/v')</code></td><td>Only for version tags (<code>v…</code>). A push to <code>master</code> and the manual QA run never publish anything.</td></tr>
+      <tr><td><code>find … -iname '*.pcsi$compressed'</code></td><td>The kit that <code>kit</code> built in the run folder. OpenVMS file names come back in either case, so the match ignores case.</td></tr>
+      <tr><td><code>XDG_CONFIG_HOME=$(mktemp -d)</code>, <code>trap</code></td><td><code>tea</code> keeps its logins in its configuration folder. The runner runs as your user, so without this the job's login would land among your own. The <code>trap</code> removes the temporary folder, and the token in it, when the step ends.</td></tr>
+      <tr><td><code>${{ secrets.RELEASE_TOKEN }}</code></td><td>The secret from step 1; in the log it shows as <code>***</code>.</td></tr>
+      <tr><td><code>tea releases create … --asset</code></td><td>Creates the release for the tag and attaches the kit.</td></tr>
+    </table>
+    <figure><img src="img/b4-2-file.png" alt="ci.yaml in the editor with the release job added at the end." width="1302" height="795"></figure>
+  </li>
+  <li id="b4-3">
+    <p>Commit and push, then tag the commit and push the tag. The push starts a normal run (release skipped); the tag starts the full run with the release. They run one after the other: the runner takes one job at a time.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>cd /opt/xde/vms_os/V9.2/DKC200/zeromq
+git commit -am "Add the release job"
+git push
+git tag v4.1.8-ws1
+git push origin v4.1.8-ws1</pre></div>
+    <figure><img src="img/b4-3-tag.png" alt="Terminal: commit, push, git tag and push of the tag v4.1.8-ws1." width="948" height="420"></figure>
+  </li>
+  <li id="b4-4">
+    <p>Both runs take about 3½ minutes together: about one for the push, two and a half for the tag. Then show the tag run (run 5):</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea actions runs view --repo xdews/zeromq 5</pre></div>
+    <figure><img src="img/b4-4-run-view.png" alt="Terminal: tea actions runs view 5, event push of the tag, all seven jobs on runner xde." width="948" height="560"><figcaption>All seven jobs ran: for a tag, <code>compile-64</code>, <code>kit</code> and <code>release</code> are no longer skipped.</figcaption></figure>
+    <figure><img src="img/b4-5-graph.png" alt="Gitea pipeline graph of the tag run: all seven jobs green, ending in release." width="2150" height="620"><figcaption>The complete pipeline: <code>checkout → compile-32 / compile-64 → tools → test / kit → release</code>.</figcaption></figure>
+  </li>
+  <li id="b4-5">
+    <p>Check the release: <code>tea releases list</code> shows it (<code>-o simple</code>: one line per release instead of a wide table), <code>tea releases assets list</code> its files, the PCSI kit.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea releases list --repo xdews/zeromq -o simple
+tea releases assets list --repo xdews/zeromq v4.1.8-ws1</pre></div>
+    <figure><img src="img/b4-6-releases.png" alt="Terminal: the release v4.1.8-ws1 and its asset, the PCSI kit." width="948" height="260"></figure>
+    <p>In the Gitea tab, the repository's <b>Releases</b> page shows the release with the kit to download. <a class="how" href="#start-6">how: Setup step 6</a></p>
+    <figure><img src="img/b4-7-release-page.png" alt="Gitea Releases page: release ZeroMQ v4.1.8-ws1 with the kit framed." width="1400" height="640"></figure>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — run 5 (the tag) succeeded with all seven jobs, and the release <code>v4.1.8-ws1</code> has the PCSI kit attached.</div>
+</section>
+<!-- ============================================================ -->
+<section id="final" aria-labelledby="h-final">
+<h2 id="h-final"><span class="opt">OPTIONAL</span>Final · QA run</h2>
+<p class="lead">This part is optional: the pipeline is complete after B4. You start the pipeline by hand, without a push or a tag. Such a run is what a QA team or a nightly schedule uses: it builds everything, including the 64-bit libraries and the kit, and runs the tests, but it publishes nothing.</p>
+
+<ol class="steps">
+  <li id="final-1">
+    <p>Start the run. <code>workflow_dispatch</code> in the pipeline's <code>on:</code> list (since B2a) allows manual runs; <code>tea actions workflows dispatch</code> starts one for a branch and prints its number, run 6.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea actions workflows dispatch --repo xdews/zeromq \
+  --ref master ci.yaml</pre></div>
+    <p>Write the options in full: in this command <code>-r</code> could mean <code>--ref</code> or <code>--repo</code>. </p>
+    <figure><img src="img/final-1-dispatch.png" alt="Terminal: tea actions workflows dispatch, Workflow dispatched successfully, Run ID 6." width="948" height="150"></figure>
+    <p>The same run can be started in the Gitea tab: <b>Actions</b> → workflow <b>ci</b> → <b>Run Workflow</b>. Use one of the two, not both: each starts a run.</p>
+    <figure><img src="img/final-1b-run-workflow.png" alt="Gitea Actions page of workflow ci with the Run Workflow button framed." width="1400" height="284"></figure>
+  </li>
+  <li id="final-2">
+    <p>When it has finished (a little over 2 minutes), show it:</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>tea actions runs view --repo xdews/zeromq 6</pre></div>
+    <figure><img src="img/final-2-run-view.png" alt="Terminal: tea actions runs view 6, event workflow_dispatch, Conclusion success; release has no runner." width="948" height="560"><figcaption>Every job ran except <code>release</code>: the run is not for a tag.</figcaption></figure>
+    <p>In the Gitea tab, open the run: <code>compile-64</code> and <code>kit</code> are green this time, <code>release</code> is skipped. <a class="how" href="#b2a-5">how: B2a step 5</a></p>
+    <figure><img src="img/final-3-graph.png" alt="Gitea pipeline graph of the manual run: six jobs green, release skipped." width="2150" height="620"><figcaption>The QA run: <code>on: workflow_dispatch</code>, everything but <code>release</code>.</figcaption></figure>
+  </li>
+  <li id="final-3">
+    <p>The kit of this run stays in its run folder on the task disk, <code>DKC200:[ci.run_6]</code>. Look at it from OpenVMS: <code>xdecli</code> runs one DCL command (single quotes keep bash from touching the <code>$</code>).</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>xdecli 'directory/size/date DKC200:[ci.run_6]*.pcsi$compressed'</pre></div>
+    <figure><img src="img/final-4-kit.png" alt="Terminal: DCL DIRECTORY listing of the PCSI kit in DKC200:[ci.run_6]." width="948" height="240"></figure>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — run 6 (<i>workflow_dispatch</i>) succeeded with <code>compile-64</code> and <code>kit</code>, <code>release</code> skipped, and the kit is in <code>DKC200:[ci.run_6]</code>.</div>
+</section>
+</main>
+</div>
+<script>
+document.querySelectorAll('button[data-copy]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var text = btn.closest('.cmd').querySelector('pre').innerText;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { selectPre(btn); });
+    } else { selectPre(btn); }
+  });
+});
+function selectPre(btn) {
+  var r = document.createRange(); r.selectNodeContents(btn.closest('.cmd').querySelector('pre'));
+  var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+</script>
+</body>
+</html>

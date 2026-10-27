@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Getting Started Guide</title>
+<style>
+/* Layout: corporate lab guide — fixed contents column on the left, one reading column of steps; offline, system fonts only. */
+:root {
+  --bg: #ffffff;
+  --panel: #f4f5f7;
+  --ink: #161b22;
+  --muted: #57606a;
+  --line: #d0d7de;
+  --accent: #0b5cad;
+  --accent-soft: #e7f0fa;
+  --ok: #1a7f37;
+  --ok-soft: #e6f4ea;
+  --note: #8a5a00;
+  --note-soft: #fff4dc;
+  --code-bg: #f6f8fa;
+  --sans: "Segoe UI", "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --mono: "Cascadia Mono", Consolas, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0f1419; --panel: #161c23; --ink: #e6edf3; --muted: #9aa5b1; --line: #30363d;
+    --accent: #6cb6ff; --accent-soft: #14273b; --ok: #56d364; --ok-soft: #12261a;
+    --note: #e3b341; --note-soft: #2b2210; --code-bg: #161b22;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1419; --panel: #161c23; --ink: #e6edf3; --muted: #9aa5b1; --line: #30363d;
+  --accent: #6cb6ff; --accent-soft: #14273b; --ok: #56d364; --ok-soft: #12261a;
+  --note: #e3b341; --note-soft: #2b2210; --code-bg: #161b22;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+a { color: var(--accent); }
+.page { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
+nav.toc {
+  position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+  background: var(--panel); border-right: 1px solid var(--line); padding: 24px 18px;
+}
+.toc .brand { font-weight: 700; font-size: 14px; letter-spacing: .02em; margin-bottom: 4px; }
+.toc .sub { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: block; padding: 6px 10px; border-radius: 4px; color: var(--ink); text-decoration: none; font-size: 14px; }
+.toc a:hover, .toc a:focus-visible { background: var(--accent-soft); outline: none; }
+.toc .num { display: inline-block; width: 34px; color: var(--muted); font-variant-numeric: tabular-nums; }
+main { padding-inline: 40px; padding-block: 32px 80px; max-width: 980px; }
+header.top { border-bottom: 3px solid var(--accent); padding-bottom: 16px; margin-bottom: 28px; }
+header.top .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 600; }
+h1 { font-size: 28px; line-height: 1.25; margin: 6px 0 8px; }
+h2 { font-size: 22px; margin: 48px 0 6px; padding-top: 12px; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
+h3 { font-size: 16px; margin: 26px 0 8px; }
+p { margin: 8px 0; max-width: 75ch; }
+.lead { color: var(--muted); max-width: 75ch; }
+.meta { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 14px 0; font-size: 14px; }
+.meta dt { color: var(--muted); font-weight: 600; }
+.meta dd { margin: 0; }
+ol.steps { padding-left: 0; list-style: none; counter-reset: step; margin: 12px 0; }
+ol.steps > li { counter-increment: step; position: relative; padding-left: 40px; margin: 22px 0; }
+ol.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; display: grid; place-items: center;
+}
+.cmd { margin: 10px 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.cmd .bar { display: flex; justify-content: space-between; align-items: center; background: var(--panel);
+  border-bottom: 1px solid var(--line); padding: 4px 10px; font-size: 12px; color: var(--muted); }
+.cmd .where { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.cmd button { font: 12px var(--sans); border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+  border-radius: 4px; padding: 2px 10px; cursor: pointer; }
+.cmd button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cmd pre { margin: 0; padding: 10px 12px; background: var(--code-bg); overflow-x: auto; font: 13px/1.5 var(--mono); }
+code { font: 13px var(--mono); background: var(--code-bg); padding: 1px 4px; border-radius: 3px; }
+kbd { font: 12px var(--sans); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 6px; background: var(--panel); }
+figure { margin: 12px 0; }
+figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; }
+figure.narrow img { max-width: 320px; }
+figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.shots { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; }
+.shots figure { margin: 0; flex: 0 1 auto; min-width: 0; }
+.shots img { max-height: 190px; width: auto; }
+.shots .arrow { color: var(--muted); font-size: 20px; }
+.callout { border-left: 4px solid var(--note); background: var(--note-soft); padding: 10px 14px; border-radius: 0 4px 4px 0; margin: 14px 0; max-width: 80ch; }
+.callout b { color: var(--note); }
+.opt { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--note); background: var(--note-soft); border: 1px solid var(--note); border-radius: 3px; padding: 0 6px; margin-right: 6px; vertical-align: 1px; }
+.how { font-size: 13px; white-space: nowrap; margin-left: 4px; }
+.how::before { content: "\21A9  "; }
+.check { border: 1px solid var(--ok); background: var(--ok-soft); border-radius: 6px; padding: 12px 16px; margin: 20px 0; max-width: 80ch; }
+.check .t { font-weight: 700; color: var(--ok); }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 12px 0; font-size: 13px; }
+.flow span { border: 1px solid var(--line); background: var(--panel); border-radius: 4px; padding: 3px 9px; font-family: var(--mono); }
+.flow i { color: var(--muted); font-style: normal; }
+table.facts { border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+table.facts td, table.facts th { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+table.facts th { background: var(--panel); }
+.choice { border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; margin: 12px 0; max-width: 80ch; }
+.choice-h { font-weight: 700; margin-bottom: 4px; }
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 3fr); gap: 12px; align-items: start; margin: 12px 0 20px; }
+.pair figure { margin: 0; }
+.pair img { width: 100%; }
+@media (max-width: 820px) { .pair { grid-template-columns: 1fr; } }
+.choice .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 3px; padding: 0 6px; margin-right: 8px; vertical-align: 1px; }
+@media (max-width: 820px) {
+  .page { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  main { padding-inline: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+<nav class="toc" aria-label="Contents">
+  <div class="brand">x86 Porting and Modernizing Workshop</div>
+  <div class="sub">Getting started</div>
+  <ol>
+    <li><a href="#start"><span class="num">1</span>Introduction</a></li>
+    <li><a href="#g1"><span class="num">G1</span>Start the container</a></li>
+    <li><a href="#g2"><span class="num">G2</span>Open VS Code</a></li>
+    <li><a href="#g3"><span class="num">G3</span>Connect Claude Code</a></li>
+    <li><a href="#g4"><span class="num">G4</span>Terminal and git</a></li>
+    <li><a href="#g5"><span class="num">G5</span>Claude Code: pane or terminal</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="top">
+  <div class="kicker">Getting started</div>
+  <h1>Set up the VMS/XDE Lab environment</h1>
+  <p class="lead">Start the workshop container, open it in the browser and connect Claude Code. You do this once, at the start of the workshop; every task builds on it.</p>
+</header>
+
+<!-- ============================================================ -->
+<section id="start" aria-labelledby="h-start">
+<h2 id="h-start">1 · Introduction</h2>
+
+<p>The whole lab runs in one container on the computer in front of you: OpenVMS x86 on VMS/XDE, a VS Code editor in your browser, and Claude Code next to the editor. Nothing else is installed on the computer, and only Claude Code connects to the internet.</p>
+
+<dl class="meta">
+  <dt>Result</dt><dd>VS Code is open in your browser on the VMS/XDE Lab start page, Claude Code answers in the right pane, and git knows your name.</dd>
+  <dt>Tools</dt><dd><b>xde.sh</b> (starts and stops the container), <b>Docker</b>, a <b>browser</b>, <b>VS Code</b> with the VMS/XDE Lab extension, and <b>Claude Code</b>.</dd>
+  <dt>You need</dt><dd>A computer prepared as described on the workshop's prerequisites page (your own, or one prepared by the organizers), the workshop USB stick (or the download) with <code>xde-full.tar.zst</code> and <code>xde.sh</code>, and a way to use Claude Code: a key file from the instructor, your own Claude subscription, or your own Anthropic Console account.</dd>
+</dl>
+
+<div class="flow" aria-label="Getting started steps">
+  <span>container</span><i>→</i><span>VS Code</span><i>→</i><span>Claude Code</span><i>→</i><span>terminal + git</span>
+</div>
+
+<p>Then go to your task: each task guide starts with its own short setup.</p>
+</section>
+
+<!-- ============================================================ -->
+<section id="g1" aria-labelledby="h-g1">
+<h2 id="h-g1">G1 · Start the container</h2>
+<p class="lead">You load the workshop image into Docker once and start the container with <code>xde.sh</code>. How you start it depends on how you use Claude Code.</p>
+
+<ol class="steps">
+  <li id="g1-1">
+    <p>Open a bash terminal on the computer itself:</p>
+    <ul>
+      <li><b>Windows:</b> start WSL2: open <b>Ubuntu</b> from the Start menu. A window opens with a bash prompt in Linux.</li>
+      <li><b>Linux:</b> open a terminal window.</li>
+    </ul>
+    <p>This guide calls it the <b>host bash</b>: bash on the computer, outside the container. It has Docker and <code>xde.sh</code>. The <b>bash terminal</b> you open later in VS Code runs inside the container and has the OpenVMS tools instead, so the two are not interchangeable. All commands in this part are typed in the host bash.</p>
+  </li>
+  <li id="g1-2">
+    <p>Copy <code>xde.sh</code> from the USB stick into a folder of your own. On Windows the stick appears in Ubuntu under <code>/mnt/</code> with its drive letter: <code>/mnt/d</code> for drive <code>D:</code>. Replace <code>/mnt/d</code> with your stick's folder.</p>
+    <div class="cmd"><div class="bar"><span class="where">host bash</span><button type="button" data-copy>Copy</button></div>
+<pre>mkdir -p ~/xde-workshop
+cp /mnt/d/xde.sh ~/xde-workshop/
+cd ~/xde-workshop</pre></div>
+  </li>
+  <li id="g1-3">
+    <p>Load the workshop image into Docker. It first checks the file against <code>SHA256SUMS</code> on the stick, then unpacks the image; this takes a few minutes and is needed only once. Skip this step if the image is already loaded, as on computers prepared by the organizers: <code>docker image ls xde-full</code> then already lists it.</p>
+    <div class="cmd"><div class="bar"><span class="where">host bash</span><button type="button" data-copy>Copy</button></div>
+<pre>bash xde.sh load /mnt/d/xde-full.tar.zst</pre></div>
+    <div class="cmd"><div class="bar"><span class="where">expected output</span></div>
+<pre>Checking xde-full.tar.zst ...
+Loaded image: xde-full:latest</pre></div>
+    <p>If it reports <i>… is damaged - copy it again or use another stick</i>, the file on the stick is broken: ask an organizer for another stick.</p>
+  </li>
+  <li id="g1-4">
+    <p>Start the container. There are two ways, depending on how you use Claude Code: <b>choose either option A or option B</b>, not both.</p>
+    <table class="facts">
+      <tr><th>Your Claude access</th><th>Option</th></tr>
+      <tr><td>A key file from the instructor</td><td><b>A</b></td></tr>
+      <tr><td>Your own Claude subscription (Pro, Max, Team or Enterprise)</td><td><b>B</b></td></tr>
+      <tr><td>Your own Anthropic Console account</td><td><b>B</b> (sign in), or <b>A</b> with an API key of your own</td></tr>
+    </table>
+    <div class="choice">
+      <div class="choice-h"><span class="tag">OPTION A</span>With a key file</div>
+      <p>The instructor gives you a file <code>claude.env</code>; save it in <code>~/xde-workshop</code>. To use an API key from your own Anthropic Console account instead, create <code>~/xde-workshop/claude.env</code> in a text editor with one line, <code>ANTHROPIC_API_KEY=</code> followed by your key. Start the container with <code>--claude-key</code>: the container then uses that key, and Claude Code needs no sign-in.</p>
+      <div class="cmd"><div class="bar"><span class="where">host bash · option A</span><button type="button" data-copy>Copy</button></div>
+<pre>bash xde.sh start --claude-key claude.env</pre></div>
+      <p>The key stays in your file on the computer: <code>xde.sh</code> hands it to the running container only and never stores it in the image.</p>
+    </div>
+    <div class="choice">
+      <div class="choice-h"><span class="tag">OPTION B</span>Sign in with your own account</div>
+      <p>Start the container without options. You sign in to Claude Code once, in part G3, with your Claude subscription or your Anthropic Console account.</p>
+      <div class="cmd"><div class="bar"><span class="where">host bash · option B</span><button type="button" data-copy>Copy</button></div>
+<pre>bash xde.sh start</pre></div>
+    </div>
+    <p>With either option, the first start installs Claude Code inside the container, which takes about a minute; later starts are faster. <code>xde.sh</code> waits until VS Code is ready and prints its address:</p>
+    <div class="cmd"><div class="bar"><span class="where">expected output</span></div>
+<pre>Starting xde-full ...
+First start: installing Claude Code (about 1 minute) ...
+Ready.
+VS Code:  http://localhost:8080   (password: lab)
+OpenVMS:  user XDEWS</pre></div>
+    <p>Later starts reuse the same container, with your work in it: run the same command again, or just <code>bash xde.sh start</code>. It takes a few seconds and skips the installation line:</p>
+    <div class="cmd"><div class="bar"><span class="where">expected output (later starts)</span></div>
+<pre>Starting xde-full ...
+Ready.
+VS Code:  http://localhost:8080   (password: lab)
+OpenVMS:  user XDEWS</pre></div>
+  </li>
+</ol>
+
+<div class="callout"><b>Port in use?</b> If the first start reports <i>port 8080 is in use by another program</i>, start on another port, for example <code>bash xde.sh start --port 8081</code> (add <code>--claude-key claude.env</code> for option A), and use that port in the browser address. <code>bash xde.sh --help</code> lists all options.</div>
+
+<div class="callout"><p><b>At the end of the day, or if everything hangs.</b> Three commands in the host bash stop the container; your work stays in it with all three, and <code>bash xde.sh start</code> brings it back as you left it.</p>
+  <table class="facts">
+    <tr><th>Command</th><th>When</th><th>What it does</th></tr>
+    <tr><td><code>bash xde.sh stop</code></td><td>At the end of the day</td><td>Shuts OpenVMS down cleanly, then stops the container. If the shutdown hangs for 20 seconds, it switches to <code>--force</code> by itself.</td></tr>
+    <tr><td><code>bash xde.sh stop --force</code></td><td>Everything is stalled: VS Code or OpenVMS no longer answers</td><td>Stops VMS/XDE at once, then the container.</td></tr>
+    <tr><td><code>bash xde.sh restart</code></td><td>Something misbehaves and you want a clean start of the same container</td><td>Stop, then start. Add <code>--force</code> if it is stalled. Reload the browser tab afterwards.</td></tr>
+  </table>
+  <div class="cmd"><div class="bar"><span class="where">expected output · bash xde.sh stop</span></div>
+<pre>Stopping xde-full (VMS/XDE shutdown, up to 20 s) ...
+Stopped. Your work in the container is kept: xde.sh start</pre></div>
+  <p>If OpenVMS does not shut down in 20 seconds, <code>stop</code> adds <i>VMS/XDE did not shut down.</i> and <i>Stopping VMS/XDE in xde-full by force ...</i> before <i>Stopped.</i>; <code>stop --force</code> prints only the force line. <code>restart</code> prints the stop lines, then the same <i>Starting xde-full ... Ready.</i> lines as <code>start</code>. OpenVMS itself starts again with the first <code>xdecli</code> command or DCL session.</p>
+  <p>Only <code>reset</code> (below) deletes your work.</p></div>
+
+<div class="callout"><p><b>Other settings or a fresh start.</b> The container keeps the settings of its first start: its port and, with option A, its key. To change them, for example to switch from option B to option A, delete the container first and start again with the new options:</p>
+  <div class="cmd"><div class="bar"><span class="where">host bash</span><button type="button" data-copy>Copy</button></div>
+<pre>bash xde.sh reset</pre></div>
+  <p><code>reset</code> asks before it deletes: type <code>yes</code> to confirm. It deletes <b>everything done in the container</b>: task files on its VMS/XDE disks, Gitea repositories and the runner, git settings and the Claude Code sign-in. The image stays loaded and your <code>claude.env</code> stays on the computer, so the next <code>start</code> is a first start again, with the Claude Code installation. If you try new options without <code>reset</code>, <code>xde.sh</code> refuses and tells you what to do.</p></div>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — <code>bash xde.sh status</code> in the host bash prints <code>xde-full is running.</code> and the VS Code address.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="g2" aria-labelledby="h-g2">
+<h2 id="h-g2">G2 · Open VS Code</h2>
+<p class="lead">VS Code runs inside the container; the browser on the computer shows it. You sign in once, then the VMS/XDE Lab start page opens.</p>
+
+<ol class="steps">
+  <li id="g2-1">
+    <p>Open a new tab in the browser and paste this address into its address bar, then press <kbd>Enter</kbd>. It is the address that <code>xde.sh</code> printed; if you started with another <code>--port</code>, use that port instead of 8080.</p>
+    <div class="cmd"><div class="bar"><span class="where">browser address bar</span><button type="button" data-copy>Copy</button></div>
+<pre>http://localhost:8080</pre></div>
+    <p>The VS Code sign-in page opens. Type the password <code>lab</code> and click <b>Submit</b>.</p>
+    <figure><img src="img/g2-1-login.png" alt="VS Code sign-in page: Welcome to VMS/XDE Lab, a password field and the Submit button; the password field is framed." width="800" height="520"></figure>
+  </li>
+  <li id="g2-2">
+    <p>The <b>VMS/XDE Lab</b> start page opens. It shows your OpenVMS user name, <b>XDEWS</b>, the workspaces of the tasks, and buttons for the most common VMS/XDE actions.</p>
+    <figure><img src="img/g2-2-start-page.png" alt="The VMS/XDE Lab start page: workshop title, OpenVMS login XDEWS, Workspaces cards for Task A, B and C, and VMS/XDE buttons." width="1302" height="900"></figure>
+    <p>The line <b>New here? Read Getting started</b> under the title opens this guide in a browser tab, so you can come back to it at any time. The task guides open the same way.</p>
+    <figure><img src="img/g2-2b-guide-link.png" alt="The top of the start page with the link Getting started framed." width="948" height="230"></figure>
+  </li>
+  <li id="g2-3">
+    <p>Get to know the window. Everything you need during the workshop is in three places:</p>
+    <figure><img src="img/g2-3-window.png" alt="The whole VS Code window with three numbered frames: 1 the VMS/XDE Lab side bar on the left, 2 the editor area in the middle, 3 the Claude Code pane on the right." width="1600" height="900"></figure>
+    <table class="facts">
+      <tr><th></th><th>Where</th><th>What it is for</th></tr>
+      <tr><td>1</td><td><b>VMS/XDE Lab</b> side bar, left</td><td><b>Workspaces</b> switches between the tasks; <b>VMS/XDE</b> opens terminals, DCL sessions and the X screen; <b>CI/CD</b> is used in Task B. The VMS/XDE Lab icon on the far left brings this side bar back at any time.</td></tr>
+      <tr><td>2</td><td>Editor area, middle</td><td>Files, the start page and terminals open here as tabs.</td></tr>
+      <tr><td>3</td><td><b>Claude Code</b>, right</td><td>Your AI assistant. It opens about 10 seconds after the rest of the window. You connect it in part G3.</td></tr>
+    </table>
+  </li>
+  <li id="g2-4">
+    <p><span class="opt">OPTIONAL</span>Look at the OpenVMS screen: in the <b>VMS/XDE</b> view click <b>X screen</b>. It opens in a separate browser tab and stays empty until an OpenVMS program draws on it, for example a DECwindows desktop. Return to the VS Code tab when you have seen it.</p>
+    <figure class="narrow"><img src="img/g2-4-x-screen.png" alt="The VMS/XDE view with the item X screen framed." width="300" height="182"></figure>
+  </li>
+</ol>
+
+<div class="callout"><b>Start page closed?</b> The home icon at the top of the <b>Workspaces</b> view, or <b>VMS/XDE Lab: Start page</b> in the command palette (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>), opens it again.</div>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — the VMS/XDE Lab start page is open and shows <b>OpenVMS login: XDEWS</b>, and the side bar on the left shows the views <b>Workspaces</b>, <b>VMS/XDE</b> and <b>CI/CD</b>.</div>
+</section>
+
+<section id="g3" aria-labelledby="h-g3">
+<h2 id="h-g3">G3 · Connect Claude Code</h2>
+<p class="lead">Claude Code is the AI assistant in the right pane. It reads the files of your task, runs commands such as <code>xdecli</code>, and explains or changes code when you ask. You connect it once; then you type requests in its prompt box.</p>
+
+<ol class="steps">
+  <li id="g3-1">
+    <p>Find the <b>Claude Code</b> pane on the right of the window (frame 3 in part G2). If it is closed, click <b>Claude Code</b> in the status bar at the bottom right to open it again.</p>
+  </li>
+  <li id="g3-2">
+    <p>What the pane shows depends on how you started the container in part G1:</p>
+    <table class="facts">
+      <tr><th>If you started with</th><th>The pane shows</th><th>Next</th></tr>
+      <tr><td><b>Option A</b>, a key file</td><td>The prompt box <i>Ask Claude to edit…</i> at the bottom, ready to use</td><td>Go on with step 4.</td></tr>
+      <tr><td><b>Option B</b>, sign in with your own account</td><td><i>How do you want to log in?</i></td><td>Sign in once, step 3.</td></tr>
+    </table>
+    <figure class="narrow"><img src="img/g3-1-signin-choice.png" alt="The Claude Code pane before sign-in: How do you want to log in? with the buttons Claude.ai Subscription, Anthropic Console and Bedrock, Foundry, or Vertex." width="292" height="700"></figure>
+  </li>
+  <li id="g3-3">
+    <p><b>Option B only:</b> sign in. Choose the button that matches your account:</p>
+    <table class="facts">
+      <tr><th>Button</th><th>Choose it if</th></tr>
+      <tr><td><b>Claude.ai Subscription</b></td><td>You have a Claude Pro, Max, Team or Enterprise plan.</td></tr>
+      <tr><td><b>Anthropic Console</b></td><td>You use your own Anthropic Console account, billed for API usage.</td></tr>
+    </table>
+    <div class="shots">
+      <figure><img src="img/g3-2a-subscription.png" alt="The sign-in choice with Claude.ai Subscription framed." width="292" height="420"><figcaption>Claude plan</figcaption></figure>
+      <figure><img src="img/g3-2b-console.png" alt="The sign-in choice with Anthropic Console framed." width="292" height="420"><figcaption>Console account</figcaption></figure>
+    </div>
+    <p>A new browser tab opens the Anthropic sign-in page. Sign in as you normally do and allow Claude Code access. Then return to the VS Code tab: the pane now shows the prompt box. You sign in only once; the container remembers it until it is removed.</p>
+    <p><b>Bedrock, Foundry, or Vertex</b> is for company cloud accounts and is not supported in this workshop.</p>
+  </li>
+  <li id="g3-3b">
+    <p>The pane is ready when it shows the prompt box <i>Ask Claude to edit…</i> at the bottom. A notice card may appear above it, for example about the model; close it with its <b>×</b>.</p>
+    <figure class="narrow"><img src="img/g3-2d-ready.png" alt="The Claude Code pane ready: What to do first? with a model notice card and the prompt box Ask Claude to edit at the bottom." width="292" height="833"></figure>
+  </li>
+  <li id="g3-4">
+    <p>Ask your first question. Click into the prompt box at the bottom of the pane, type or paste the request below, and press <kbd>Enter</kbd>.</p>
+    <div class="cmd"><div class="bar"><span class="where">Claude Code prompt box</span><button type="button" data-copy>Copy</button></div>
+<pre>Which OpenVMS version runs in VMS/XDE here? Check it with xdecli.</pre></div>
+    <figure class="narrow"><img src="img/g3-3-prompt.png" alt="The Claude Code pane with the request typed in the prompt box; the prompt box is framed." width="292" height="833"></figure>
+    <p>Claude runs <code>xdecli</code> to ask OpenVMS and answers in a few seconds. Each command it ran is shown in the conversation as a <b>Bash</b> block with its input (<b>IN</b>) and output (<b>OUT</b>).</p>
+    <figure class="narrow"><img src="img/g3-4-answer.png" alt="The Claude Code pane: Claude ran an xdecli command and answers with the OpenVMS version." width="292" height="833"><figcaption>An example answer. Claude words it differently each time; the version is the same.</figcaption></figure>
+  </li>
+  <li id="g3-5">
+    <p>Decide what Claude may do. Reading files, running <code>xdecli</code> and read-only commands such as <code>ls</code> or <code>grep</code> are allowed in this lab. For anything that changes something, Claude first asks you. Try it:</p>
+    <div class="cmd"><div class="bar"><span class="where">Claude Code prompt box</span><button type="button" data-copy>Copy</button></div>
+<pre>Create an empty file /tmp/hello.txt with touch.</pre></div>
+    <p>Claude shows the command it wants to run and waits for your answer:</p>
+    <figure class="narrow"><img src="img/g3-5-permission.png" alt="Claude Code asks Allow this bash command? for touch /tmp/hello.txt, with the choices 1 Yes, 2 Yes and allow for this project, 3 No, and a field Tell Claude what to do instead." width="292" height="833"></figure>
+    <table class="facts">
+      <tr><th>Choice</th><th>What happens</th></tr>
+      <tr><td><b>1 Yes</b></td><td>Claude runs this command once.</td></tr>
+      <tr><td><b>2 Yes, allow …</b></td><td>Claude runs it and does not ask again for this kind of command in this project.</td></tr>
+      <tr><td><b>3 No</b></td><td>Claude does not run it.</td></tr>
+      <tr><td><i>Tell Claude what to do instead</i></td><td>Type another instruction; Claude does not run the command.</td></tr>
+    </table>
+    <p>Choose <b>1 Yes</b>: click it, or press <kbd>Enter</kbd> because it is selected. Claude runs the command and reports the result.</p>
+    <figure class="narrow"><img src="img/g3-6-approved.png" alt="The Claude Code pane: the touch command ran, shown as a Bash block with IN and OUT, and Claude reports that it created /tmp/hello.txt." width="292" height="833"></figure>
+    <p>Look at what Claude wants to run or change before you allow it: you stay in control.</p>
+  </li>
+</ol>
+
+<div class="callout"><b>Pane stays empty?</b> The Claude Code pane opens about 10 seconds after VS Code is ready and fills in a few seconds more. If it is still missing or blank after a minute, reload the browser tab (<kbd>F5</kbd>); VS Code comes back as it was, with the pane filled.</div>
+
+<div class="callout"><b>A new conversation.</b> Each task is easier to follow in its own conversation. Start one with the new-conversation icon (speech bubble with <b>+</b>) at the top right of the Claude Code pane; the clock icon next to it lists earlier conversations.</div>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — Claude Code answered your first question with the OpenVMS version, and you have allowed one command with <b>Yes</b>.</div>
+</section>
+
+<section id="g4" aria-labelledby="h-g4">
+<h2 id="h-g4">G4 · Terminal and git</h2>
+<p class="lead">You open a terminal inside the container, run a first OpenVMS command from it, and tell git who you are. The tasks use both kinds of OpenVMS access shown here.</p>
+
+<ol class="steps">
+  <li id="g4-1">
+    <p>Open a terminal: in the <b>VMS/XDE</b> view click <b>New bash terminal</b>. It opens as an editor tab, in the task disk <code>/opt/xde/vms_os/V9.2/DKC100</code>.</p>
+    <figure class="narrow"><img src="img/g4-1-new-bash.png" alt="The VMS/XDE view with the item New bash terminal framed." width="300" height="182"></figure>
+    <p>This guide calls it the <b>bash terminal</b>. <b>It runs inside the VMS/XDE container</b>, next to OpenVMS, unlike the <b>host bash</b> of part G1, which runs on the computer itself. Wherever a guide says <i>bash terminal</i>, it means this terminal in VS Code; the tasks' commands are typed here.</p>
+  </li>
+  <li id="g4-2">
+    <p>Run a first OpenVMS command. <code>xdecli</code> runs one DCL command on OpenVMS and prints its output; the current bash folder is the OpenVMS default directory. Single quotes keep bash away from DCL characters such as <code>$</code>.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>xdecli 'show default'
+xdecli 'show system/noprocess'</pre></div>
+    <figure><img src="img/g4-2-xdecli.png" alt="Terminal: xdecli show default prints DKC100:[000000]; show system/noprocess prints OpenVMS V9.2-3 on node VMSXDE." width="948" height="200"><figcaption>The Linux folder <code>/opt/xde/vms_os/V9.2/DKC100</code> is the OpenVMS disk <code>DKC100:</code>.</figcaption></figure>
+    <p>The first command after a start also starts OpenVMS, so it takes a few seconds longer.</p>
+  </li>
+  <li id="g4-3">
+    <p>Tell git who you are. Every commit records an author; without a name and e-mail <code>git commit</code> refuses with <i>Author identity unknown</i>. The values are only labels for this workshop.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>git config --global user.name "Workshop Participant"
+git config --global user.email "participant@workshop.invalid"
+git config --global --list | grep user</pre></div>
+    <figure><img src="img/g4-3-git-identity.png" alt="Terminal: git config --global --list shows user.name=Workshop Participant and user.email=participant@workshop.invalid." width="948" height="170"></figure>
+  </li>
+  <li id="g4-4">
+    <p><span class="opt">OPTIONAL</span>Open an interactive OpenVMS session. Some work needs a real terminal session that keeps its state, for example the OpenVMS debugger. In the <b>VMS/XDE</b> view click <b>New VMS/XDE DCL session</b>; at <i>Username:</i> type <code>XDEWS</code> and press <kbd>Enter</kbd>.</p>
+    <figure class="narrow"><img src="img/g4-4-dcl-item.png" alt="The VMS/XDE view with the item New VMS/XDE DCL session framed." width="300" height="182"></figure>
+    <p>At the <code>$</code> prompt, type DCL commands as on any OpenVMS system:</p>
+    <div class="cmd"><div class="bar"><span class="where">DCL session</span><button type="button" data-copy>Copy</button></div>
+<pre>show time
+logout</pre></div>
+    <figure><img src="img/g4-5-dcl-session.png" alt="The DCL session tab: OpenVMS login as XDEWS, the $ prompt, show time and logout." width="948" height="330"></figure>
+    <p><code>logout</code> ends the session; closing its tab does the same. OpenVMS itself keeps running.</p>
+  </li>
+</ol>
+
+<table class="facts">
+  <tr><th>To run</th><th>Use</th><th>State between commands</th></tr>
+  <tr><td>One DCL command, a build, a test</td><td><code>xdecli</code> in the bash terminal</td><td>None: each call is a fresh OpenVMS login</td></tr>
+  <tr><td>Several steps that depend on each other, the debugger</td><td><b>VMS/XDE DCL session</b></td><td>Kept until <code>logout</code></td></tr>
+</table>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — the bash terminal is open, <code>xdecli 'show system/noprocess'</code> printed the OpenVMS version, and <code>git config --global --list</code> shows your <code>user.name</code>. You are ready for your task: open its workspace in the <b>Workspaces</b> view and follow its guide.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="g5" aria-labelledby="h-g5">
+<h2 id="h-g5">G5 · Claude Code: pane or terminal</h2>
+<p class="lead">Claude Code runs in two places: the pane on the right, which you used in part G3, and a bash terminal, where you start it with the command <code>claude</code>. It is the same Claude with the same sign-in and the same rules; only the controls differ. Each task guide says which one it uses: Tasks B and C use the pane, Task A the terminal.</p>
+
+<p>The terminal is useful when Claude should work in one project folder: it works in the folder you start it in, and reads that project's own settings and skills from there. The pane works in the workspace folder that VS Code has open.</p>
+
+<table class="facts">
+  <tr><th></th><th>Pane</th><th>Terminal</th></tr>
+  <tr><td>Open it</td><td>The pane on the right; if it is closed, <b>Claude Code</b> in the status bar</td><td>In a bash terminal: <code>cd</code> to the project, then <code>claude</code></td></tr>
+  <tr><td>Works in</td><td>The workspace folder</td><td>The folder where you started it</td></tr>
+  <tr><td>First start</td><td>Sign-in only (option B of part G1)</td><td>A few one-time screens: text style, security notes, terminal setup, and <i>Is this a project you created or one you trust?</i>, where <b>No, exit</b> is selected first: press <kbd>↓</kbd>, then <kbd>Enter</kbd>, for <b>Yes, I trust this folder</b></td></tr>
+  <tr><td>Ask</td><td>Type in the prompt box, <kbd>Enter</kbd></td><td>Type at the <code>❯</code> prompt line, <kbd>Enter</kbd>; <kbd>Shift</kbd>+<kbd>Enter</kbd> starts a new line</td></tr>
+  <tr><td>Permission question</td><td><i>Allow this bash command?</i>: click <b>1 Yes</b>, <b>2 Yes, allow …</b> or <b>3 No</b></td><td><i>Do you want to proceed?</i>: <b>1. Yes</b> is selected, <kbd>Enter</kbd> allows it, <kbd>Esc</kbd> cancels</td></tr>
+  <tr><td>File change</td><td><i>Allow write to …?</i> in the pane</td><td><i>Do you want to create …?</i> (or <i>…make this edit…?</i>); the change also opens as a tab in the editor</td></tr>
+  <tr><td>Stop a running answer</td><td>The stop button in the prompt box</td><td><kbd>Esc</kbd></td></tr>
+  <tr><td>New conversation</td><td>The speech bubble with <b>+</b> at the top right</td><td><code>/clear</code></td></tr>
+  <tr><td>Leave</td><td>Close the pane</td><td><code>/exit</code></td></tr>
+</table>
+
+
+<h3>The same actions side by side</h3>
+<p>Left the pane, right the terminal.</p>
+<p><b>Ready for a request.</b> Pane: The pane: the prompt box <i>Ask Claude to edit…</i> at the bottom. Terminal: The terminal: the <code>❯</code> prompt line, <i>manual mode on</i> below it.</p>
+<div class="pair">
+  <figure><img src="img/g5-pane-1-ready.png" alt="The Claude Code pane ready: What to do first? and the prompt box Ask Claude to edit at the bottom." width="292" height="833"></figure>
+  <figure><img src="img/g5-term-1-ready.png" alt="Claude Code in a bash terminal: version, model and folder at the top, the prompt line and manual mode on at the bottom." width="948" height="760"></figure>
+</div>
+<p><b>A command that changes something.</b> Pane: <i>Allow this bash command?</i> with <b>1 Yes</b>, <b>2 Yes, allow …</b>, <b>3 No</b>. Terminal: <i>Do you want to proceed?</i> with <b>1. Yes</b> selected; <kbd>Enter</kbd> allows it.</p>
+<div class="pair">
+  <figure><img src="img/g5-pane-2-permission.png" alt="The pane asks Allow this bash command? for a touch command, with 1 Yes, 2 Yes allow for this project, 3 No and a field Tell Claude what to do instead." width="292" height="833"></figure>
+  <figure><img src="img/g5-term-2-permission.png" alt="The terminal shows the touch command and asks Do you want to proceed? with 1. Yes, 2. Yes and always allow access to /tmp from this project, 3. No." width="948" height="760"></figure>
+</div>
+<p><b>A file change.</b> Pane: <i>Allow write to …?</i> in the pane. Terminal: <i>Do you want to create …?</i> in the terminal; the change also opens as a tab in the editor.</p>
+<div class="pair">
+  <figure><img src="img/g5-pane-3-file-change.png" alt="The pane asks Allow write to g5-pane.md? with 1 Yes, 2 Yes allow access to tmp for this session, 3 No." width="292" height="833"></figure>
+  <figure><img src="img/g5-term-3-file-change.png" alt="The terminal shows Opened changes in VMS/XDE Lab and asks Do you want to create g5-term.md? with 1. Yes, 2. Yes and switch to accept edits, 3. No." width="948" height="760"></figure>
+</div>
+<p><b>While Claude works.</b> Pane: The stop button (orange square) in the prompt box stops it. Terminal: <i>esc to interrupt</i> at the bottom: <kbd>Esc</kbd> stops it.</p>
+<div class="pair">
+  <figure><img src="img/g5-pane-4-running.png" alt="The pane while Claude works on an answer: Thinking, and the orange stop button at the bottom right of the prompt box." width="292" height="833"></figure>
+  <figure><img src="img/g5-term-4-running.png" alt="The terminal while Claude writes an answer, with esc to interrupt in the bottom line." width="948" height="760"></figure>
+</div>
+
+<p><b>Shared by both:</b> the sign-in, the rules (Claude asks before commands that change something; <code>xdecli</code> and read-only commands run without asking) and the model. <b>Not shared:</b> conversations. A conversation in the pane does not appear in the terminal, and the other way round.</p>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — you know where your task uses Claude Code. If it is the terminal, the first <code>claude</code> in the task folder shows the one-time screens; answer the trust question with <kbd>↓</kbd> and <kbd>Enter</kbd>.</div>
+</section>
+</main>
+</div>
+<script>
+document.querySelectorAll('button[data-copy]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var text = btn.closest('.cmd').querySelector('pre').innerText;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { selectPre(btn); });
+    } else { selectPre(btn); }
+  });
+});
+function selectPre(btn) {
+  var r = document.createRange(); r.selectNodeContents(btn.closest('.cmd').querySelector('pre'));
+  var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+</script>
+</body>
+</html>

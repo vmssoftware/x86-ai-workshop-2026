@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Task C Lab Guide</title>
+<style>
+/* Layout: corporate lab guide — fixed contents column on the left, one reading column of steps; offline, system fonts only. */
+:root {
+  --bg: #ffffff;
+  --panel: #f4f5f7;
+  --ink: #161b22;
+  --muted: #57606a;
+  --line: #d0d7de;
+  --accent: #0b5cad;
+  --accent-soft: #e7f0fa;
+  --ok: #1a7f37;
+  --ok-soft: #e6f4ea;
+  --note: #8a5a00;
+  --note-soft: #fff4dc;
+  --code-bg: #f6f8fa;
+  --sans: "Segoe UI", "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --mono: "Cascadia Mono", Consolas, "DejaVu Sans Mono", "Liberation Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0f1419; --panel: #161c23; --ink: #e6edf3; --muted: #9aa5b1; --line: #30363d;
+    --accent: #6cb6ff; --accent-soft: #14273b; --ok: #56d364; --ok-soft: #12261a;
+    --note: #e3b341; --note-soft: #2b2210; --code-bg: #161b22;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1419; --panel: #161c23; --ink: #e6edf3; --muted: #9aa5b1; --line: #30363d;
+  --accent: #6cb6ff; --accent-soft: #14273b; --ok: #56d364; --ok-soft: #12261a;
+  --note: #e3b341; --note-soft: #2b2210; --code-bg: #161b22;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 var(--sans); }
+a { color: var(--accent); }
+.page { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
+nav.toc {
+  position: sticky; top: 0; align-self: start; height: 100vh; overflow-y: auto;
+  background: var(--panel); border-right: 1px solid var(--line); padding: 24px 18px;
+}
+.toc .brand { font-weight: 700; font-size: 14px; letter-spacing: .02em; margin-bottom: 4px; }
+.toc .sub { color: var(--muted); font-size: 12px; margin-bottom: 18px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: block; padding: 6px 10px; border-radius: 4px; color: var(--ink); text-decoration: none; font-size: 14px; }
+.toc a:hover, .toc a:focus-visible { background: var(--accent-soft); outline: none; }
+.toc .num { display: inline-block; width: 34px; color: var(--muted); font-variant-numeric: tabular-nums; }
+main { padding-inline: 40px; padding-block: 32px 80px; max-width: 980px; }
+header.top { border-bottom: 3px solid var(--accent); padding-bottom: 16px; margin-bottom: 28px; }
+header.top .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); font-weight: 600; }
+h1 { font-size: 28px; line-height: 1.25; margin: 6px 0 8px; }
+h2 { font-size: 22px; margin: 48px 0 6px; padding-top: 12px; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
+h3 { font-size: 16px; margin: 26px 0 8px; }
+p { margin: 8px 0; max-width: 75ch; }
+.lead { color: var(--muted); max-width: 75ch; }
+.meta { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 14px 0; font-size: 14px; }
+.meta dt { color: var(--muted); font-weight: 600; }
+.meta dd { margin: 0; }
+ol.steps { padding-left: 0; list-style: none; counter-reset: step; margin: 12px 0; }
+ol.steps > li { counter-increment: step; position: relative; padding-left: 40px; margin: 22px 0; }
+ol.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; display: grid; place-items: center;
+}
+.cmd { margin: 10px 0; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.cmd .bar { display: flex; justify-content: space-between; align-items: center; background: var(--panel);
+  border-bottom: 1px solid var(--line); padding: 4px 10px; font-size: 12px; color: var(--muted); }
+.cmd .where { font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.cmd button { font: 12px var(--sans); border: 1px solid var(--line); background: var(--bg); color: var(--ink);
+  border-radius: 4px; padding: 2px 10px; cursor: pointer; }
+.cmd button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.cmd pre { margin: 0; padding: 10px 12px; background: var(--code-bg); overflow-x: auto; font: 13px/1.5 var(--mono); }
+code { font: 13px var(--mono); background: var(--code-bg); padding: 1px 4px; border-radius: 3px; }
+kbd { font: 12px var(--sans); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 0 6px; background: var(--panel); }
+figure { margin: 12px 0; }
+figure img { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 4px; }
+figure.narrow img { max-width: 320px; }
+figcaption { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.shots { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 12px 0; }
+.shots figure { margin: 0; flex: 0 1 auto; min-width: 0; }
+.shots img { max-height: 190px; width: auto; }
+.shots .arrow { color: var(--muted); font-size: 20px; }
+.callout { border-left: 4px solid var(--note); background: var(--note-soft); padding: 10px 14px; border-radius: 0 4px 4px 0; margin: 14px 0; max-width: 80ch; }
+.callout b { color: var(--note); }
+.opt { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--note); background: var(--note-soft); border: 1px solid var(--note); border-radius: 3px; padding: 0 6px; margin-right: 6px; vertical-align: 1px; }
+.how { font-size: 13px; white-space: nowrap; margin-left: 4px; }
+.how::before { content: "\21A9  "; }
+.check { border: 1px solid var(--ok); background: var(--ok-soft); border-radius: 6px; padding: 12px 16px; margin: 20px 0; max-width: 80ch; }
+.check .t { font-weight: 700; color: var(--ok); }
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 12px 0; font-size: 13px; }
+.flow span { border: 1px solid var(--line); background: var(--panel); border-radius: 4px; padding: 3px 9px; font-family: var(--mono); }
+.flow i { color: var(--muted); font-style: normal; }
+table.facts { border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+table.facts td, table.facts th { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+table.facts th { background: var(--panel); }
+@media (max-width: 820px) {
+  .page { grid-template-columns: 1fr; }
+  nav.toc { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  main { padding-inline: 16px; }
+}
+.scheme svg { display: block; width: 100%; max-width: 860px; height: auto; }
+.scheme .zone { fill: var(--panel); stroke: var(--line); }
+.scheme .box { fill: var(--bg); stroke: var(--accent); stroke-width: 1.5; }
+.scheme .kit { fill: var(--ok-soft); stroke: var(--ok); stroke-width: 1.5; }
+.scheme .ln { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+.scheme .zt { fill: var(--muted); font: 600 12px var(--sans); letter-spacing: .06em; }
+.scheme .t { fill: var(--ink); font: 13px var(--mono); }
+.scheme .s { fill: var(--muted); font: 12px var(--sans); }
+.scheme .ah { fill: var(--muted); }
+</style>
+</head>
+<body>
+<div class="page">
+<nav class="toc" aria-label="Contents">
+  <div class="brand">x86 Porting and Modernizing Workshop</div>
+  <div class="sub">Task C · Linux and OpenVMS tools</div>
+  <ol>
+    <li><a href="#start"><span class="num">1</span>Introduction and setup</a></li>
+    <li><a href="#c0"><span class="num">C0</span>Meet BILLING</a></li>
+    <li><a href="#c1"><span class="num">C1</span>A Makefile from Claude</a></li>
+    <li><a href="#c2"><span class="num">C2</span>Incremental builds</a></li>
+    <li><a href="#c3"><span class="num">C3</span>Parallel builds</a></li>
+    <li><a href="#final"><span class="num">F</span>The reference Makefile</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="top">
+  <div class="kicker">Task C</div>
+  <h1>Using Linux and OpenVMS developer tools together</h1>
+  <p class="lead">Build an existing OpenVMS project from Linux with a Makefile that runs every OpenVMS step through xdecli: only changed sources are rebuilt, and independent compiles run in parallel.</p>
+</header>
+
+<!-- ============================================================ -->
+<section id="start" aria-labelledby="h-start">
+<h2 id="h-start">1 · Introduction and setup</h2>
+
+<p>Your team maintains <b>BILLING</b>, an OpenVMS program in C, with one module in MACRO-32 and one in COBOL. Its build procedure <code>build.com</code> compiles every source file, one after another, in one process. It is not incremental: it compiles everything every time, even when you changed only one file. In this task Claude Code writes a <b>Makefile</b> for it. GNU make runs on Linux in your container and starts each OpenVMS step with <code>xdecli</code>, so it can skip what is up to date and run independent compiles at the same time.</p>
+
+<dl class="meta">
+  <dt>Result</dt><dd>A Makefile that builds the same PCSI kits as <code>build.com</code>. After a change to one source file only that file is compiled again, and <code>make -j6</code> compiles independent files at the same time.</dd>
+  <dt>Tools</dt><dd>The VSI C, MACRO-32 and COBOL compilers, librarian, linker and PCSI on VMS/XDE, an interactive <b>DCL session</b>, <b>xdecli</b> (runs one DCL command on VMS/XDE from bash), <b>GNU make</b>, and Claude Code.</dd>
+  <dt>Project</dt><dd><code>DKC300:[billing]</code>, on Linux <code>/opt/xde/vms_os/V9.2/DKC300/billing</code>: the team's git repository.</dd>
+  <dt>Time</dt><dd>About 45 minutes.</dd>
+</dl>
+
+<figure class="scheme">
+<svg viewBox="0 0 860 300" role="img" aria-label="make in the Linux container starts one xdecli call per build step; each call runs on OpenVMS in VMS/XDE. The 18 compiles (C, MACRO-32, COBOL) run in parallel, then LIBRARY, LINK, PRODUCT PACKAGE and PRODUCT COPY produce the two kits.">
+  <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+  <rect class="zone" x="8" y="8" width="236" height="284" rx="6"/>
+  <text class="zt" x="22" y="30">LINUX (YOUR CONTAINER)</text>
+  <rect class="box" x="28" y="112" width="196" height="64" rx="4"/>
+  <text class="t" x="44" y="138">make -j6</text>
+  <text class="s" x="44" y="160">rebuilds what is out of date</text>
+  <text class="s" x="22" y="210">Compares file times of</text>
+  <text class="s" x="22" y="228">sources and results on the</text>
+  <text class="s" x="22" y="246">task disk; one xdecli call</text>
+  <text class="s" x="22" y="264">per build step.</text>
+  <rect class="zone" x="300" y="8" width="552" height="284" rx="6"/>
+  <text class="zt" x="314" y="30">OPENVMS ON VMS/XDE · DKC300:[billing]</text>
+  <g>
+    <rect class="box" x="318" y="48" width="104" height="30" rx="4"/><text class="t" x="330" y="68">CC acc…</text>
+    <rect class="box" x="318" y="88" width="104" height="30" rx="4"/><text class="t" x="330" y="108">CC aud…</text>
+    <rect class="box" x="318" y="128" width="104" height="30" rx="4"/><text class="t" x="330" y="148">MACRO inv…</text>
+    <rect class="box" x="318" y="168" width="104" height="30" rx="4"/><text class="t" x="330" y="188">COBOL loy…</text>
+    <rect class="box" x="318" y="208" width="104" height="30" rx="4"/><text class="t" x="330" y="228">CC main</text>
+    <text class="s" x="318" y="262">18 compiles, 6 at a time</text>
+  </g>
+  <path class="ln" d="M224 144 L270 144" />
+  <path class="ln" d="M270 63 L270 223" />
+  <path class="ln" marker-end="url(#ah)" d="M270 63 L316 63" />
+  <path class="ln" marker-end="url(#ah)" d="M270 103 L316 103" />
+  <path class="ln" marker-end="url(#ah)" d="M270 143 L316 143" />
+  <path class="ln" marker-end="url(#ah)" d="M270 183 L316 183" />
+  <path class="ln" marker-end="url(#ah)" d="M270 223 L316 223" />
+  <text class="s" x="250" y="132" transform="rotate(-90 258 144)">xdecli</text>
+  <path class="ln" d="M422 63 L446 63 L446 183 M422 103 L446 103 M422 143 L446 143 M422 183 L446 183" />
+  <path class="ln" marker-end="url(#ah)" d="M446 123 L466 123" />
+  <rect class="box" x="468" y="108" width="90" height="30" rx="4"/><text class="t" x="480" y="128">LIBRARY</text>
+  <path class="ln" marker-end="url(#ah)" d="M558 123 L576 123" />
+  <path class="ln" d="M422 223 L590 223 L590 140" />
+  <rect class="box" x="578" y="108" width="64" height="30" rx="4"/><text class="t" x="590" y="128">LINK</text>
+  <path class="ln" marker-end="url(#ah)" d="M642 123 L660 123" />
+  <rect class="box" x="662" y="94" width="176" height="58" rx="4"/><text class="t" x="674" y="116">PRODUCT PACKAGE</text><text class="t" x="674" y="138">PRODUCT COPY</text>
+  <path class="ln" marker-end="url(#ah)" d="M750 152 L750 186" />
+  <rect class="kit" x="610" y="188" width="228" height="50" rx="4"/>
+  <text class="t" x="622" y="208">…BILLING-V0100-0-1.PCSI</text>
+  <text class="t" x="622" y="228">….PCSI$COMPRESSED</text>
+</svg>
+<figcaption>make decides on Linux what must be rebuilt; each step runs on OpenVMS through <code>xdecli</code>, in the OpenVMS directory that matches the Linux folder. Independent compiles run at the same time.</figcaption>
+</figure>
+
+<h3>Set up</h3>
+<p><b>Before you start: complete <a href="../start/index.html">Getting started</a></b> (container, VS Code, Claude Code, terminals and git). The steps below are only the ones for this task.</p>
+<p>This task uses Claude Code <b>in the pane</b> on the right, as in Getting started. The terminal alternative: <a href="../start/index.html#g5">Getting started, G5</a>.</p>
+<ol class="steps">
+  <li id="start-1">
+    <p>Open the Task C workspace: in the <b>VMS/XDE Lab</b> side bar, under <b>Workspaces</b>, click <b>Task C: Linux and OpenVMS tools</b>. The window reloads with the task disk <code>DKC300</code>.</p>
+    <figure><img src="img/s1-open-workspace.png" alt="VS Code with the VMS/XDE Lab side bar; the item Task C: Linux and OpenVMS tools under Workspaces is framed." width="1302" height="900"></figure>
+  </li>
+  <li id="start-2">
+    <p><span class="opt">OPTIONAL</span>In the Explorer, expand <b>billing</b> and <b>src</b>. The library sources in <code>src</code> are 15 C files, <code>invnum.mar</code> (MACRO-32) and <code>loyalty.cob</code> (COBOL); <code>main.c</code> is the program. <code>billing.pcsi$desc</code> and <code>billing.pcsi$text</code> describe the PCSI kit.</p>
+    <figure class="narrow"><img src="img/s2-explorer.png" alt="Explorer: folder billing with src (C, MACRO-32 and COBOL sources), build.com, clean.com, main.c and the two PCSI description files." width="300" height="640"></figure>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — the Task C workspace is open and the Explorer shows the folder <code>billing</code>.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="c0" aria-labelledby="h-c0">
+<h2 id="h-c0">C0 · Meet BILLING</h2>
+<p class="lead">You build BILLING the way the team does today, with its build procedure.</p>
+
+<ol class="steps">
+  <li id="c0-1">
+    <p><span class="opt">OPTIONAL</span>Open <code>billing/build.com</code>. Its header lists the six steps: compile the 17 library sources (C, MACRO-32 and COBOL), put them in the object library <code>BILLING.OLB</code>, compile <code>main.c</code>, link <code>BILLING.EXE</code>, create the PCSI kit, and create the compressed kit. Each step waits for the one before.</p>
+  </li>
+  <li id="c0-2">
+    <p>Open an OpenVMS session: in the <b>VMS/XDE</b> view click <b>New VMS/XDE DCL session</b>. At <i>Username:</i> type <code>XDEWS</code> and press <kbd>Enter</kbd>; there is no password. You get a <code>$</code> prompt. All OpenVMS commands in this guide are typed here.</p>
+    <figure class="narrow"><img src="img/c0-2-new-dcl.png" alt="The VMS/XDE view with the item New VMS/XDE DCL session framed." width="300" height="182"></figure>
+  </li>
+  <li id="c0-3">
+    <p>Go to the project. A DCL session starts in your OpenVMS home directory, not in the task disk.</p>
+    <div class="cmd"><div class="bar"><span class="where">DCL session</span><button type="button" data-copy>Copy</button></div>
+<pre>SET DEFAULT DKC300:[billing]</pre></div>
+  </li>
+  <li id="c0-4">
+    <p>Build with the team's procedure. It compiles all 18 source files, links the program and creates two PCSI kits: <code>DEMO-X86VMS-BILLING-V0100-0-1.PCSI</code> and the compressed <code>DEMO-X86VMS-BILLING-V0100-0-1.PCSI$COMPRESSED</code> — every time you run it, whether anything changed or not.</p>
+    <div class="cmd"><div class="bar"><span class="where">DCL session</span><button type="button" data-copy>Copy</button></div>
+<pre>@build.com</pre></div>
+    <div class="cmd"><div class="bar"><span class="where">expected output (end)</span></div>
+<pre>The following product has been copied:
+    DEMO X86VMS BILLING V1.0-0             Layered Product
+Portion done: 0%...100%</pre></div>
+    <figure><img src="img/c0-4-buildcom.png" alt="DCL session: the end of the build.com output; PRODUCT COPY has created the compressed kit." width="948" height="864"><figcaption>The end of the build: <code>PRODUCT COPY</code> has created the compressed kit.</figcaption></figure>
+  </li>
+  <li id="c0-5">
+    <p><span class="opt">OPTIONAL</span>Run the same build from Linux. Open a bash terminal (in the <b>VMS/XDE</b> view click <b>New bash terminal</b>; it starts in the task disk). <code>xdecli</code> runs one DCL command, with the current bash folder as its OpenVMS default directory. This is how the Makefile will run each step.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>cd billing
+xdecli '@build.com'</pre></div>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — both kits are in the project folder:
+<div class="cmd"><div class="bar"><span class="where">DCL session</span><button type="button" data-copy>Copy</button></div>
+<pre>DIR DEMO-*</pre></div>
+<div class="cmd"><div class="bar"><span class="where">expected output</span></div>
+<pre>Directory DKC300:[billing]
+
+DEMO-X86VMS-BILLING-V0100-0-1.PCSI;1    DEMO-X86VMS-BILLING-V0100-0-1.PCSI$COMPRESSED;1
+
+Total of 2 files.</pre></div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="c1" aria-labelledby="h-c1">
+<h2 id="h-c1">C1 · Ask Claude Code for a Makefile</h2>
+<p class="lead">You ask Claude Code to turn <code>build.com</code> into a Makefile. Claude reads the project, writes the Makefile and builds with it.</p>
+
+<ol class="steps">
+  <li id="c1-1">
+    <p>Delete the build output of C0.</p>
+    <div class="cmd"><div class="bar"><span class="where">DCL session</span><button type="button" data-copy>Copy</button></div>
+<pre>@clean.com</pre></div>
+  </li>
+  <li id="c1-2">
+    <p>Ask Claude. Paste this prompt into the Claude Code pane on the right. It tells Claude the one thing it can't know from the files: how this machine reaches OpenVMS.</p>
+    <div class="cmd"><div class="bar"><span class="where">Claude Code</span><button type="button" data-copy>Copy</button></div>
+<pre>The billing directory is an OpenVMS project; build.com builds it. Create a Makefile
+that does the same build from Linux, including both PCSI kits, then run it.
+
+On this machine, xdecli runs a DCL command on a VMS/XDE OpenVMS system,
+in the VMS directory that matches the current Linux directory. Run `xdecli --help` first.
+
+Requirements: incremental builds, works with
+`make -j6`, `make clean` runs clean.com, `make run` runs the executable.
+Verify by building and running the result.</pre></div>
+    <p>Claude asks before it writes a file and before most commands. Read each request and allow it. Claude needs a few minutes: it reads <code>build.com</code>, writes <code>billing/Makefile</code>, builds, and runs the program.</p>
+    <figure class="narrow"><img src="img/c1-2-prompt.png" alt="The Claude Code pane with the prompt; Claude has looked at the billing folder and asks to run a bash command that reads build.com." width="292" height="700"><figcaption>Claude first reads the project. <code>xdecli</code>, <code>ls</code>, <code>cat</code>, <code>grep</code> and <code>diff</code> run without asking; for other commands it asks: read the command, then choose <b>Yes</b>.</figcaption></figure>
+  </li>
+  <li id="c1-3">
+    <p><span class="opt">OPTIONAL</span>Open <code>billing/Makefile</code> and see how it calls <code>xdecli</code> for each step: compiling, creating the library, linking and building the PCSI kits.</p>
+  </li>
+</ol>
+
+<div class="callout"><b>Claude can produce different Makefiles</b>, depending on the prompt and the model. That is fine: the checkpoints check what it does, not how it is written. If the checkpoint below fails, tell Claude what you saw and ask it to fix the Makefile. If it still fails, copy the reference Makefile from the <a href="#final">Final</a> part into <code>billing/Makefile</code>, then run <code>make clean</code>: object files left by another Makefile can have other names than the ones the reference expects. To start over completely, run <code>git clean -fdx &amp;&amp; git checkout .</code> in a bash terminal in <code>billing</code>: the project is a git repository, so this restores it as handed out.</div>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — the Makefile builds both kits and runs BILLING from a clean tree. In a bash terminal (<b>VMS/XDE</b> view → <b>New bash terminal</b>):
+<div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>cd /opt/xde/vms_os/V9.2/DKC300/billing
+make clean &amp;&amp; make &amp;&amp; make run
+ls DEMO-*</pre></div>
+<div class="cmd"><div class="bar"><span class="where">expected output (end)</span></div>
+<pre>  Ledger total               $2250.57
+  Audit checksum             14648627
+ DEMO-X86VMS-BILLING-V0100-0-1.PCSI
+'DEMO-X86VMS-BILLING-V0100-0-1.PCSI$COMPRESSED'</pre></div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="c2" aria-labelledby="h-c2">
+<h2 id="h-c2">C2 · Incremental builds</h2>
+<p class="lead">make compares file times: a result is built again only if a file it depends on is newer. You change nothing, then one file, and watch what make does. The commands run in the bash terminal of C1, in <code>billing</code>.</p>
+
+<ol class="steps">
+  <li id="c2-1">
+    <p>Build again without changing anything. Every result is newer than its sources, so make has nothing to do and does not start OpenVMS at all.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>make</pre></div>
+    <div class="cmd"><div class="bar"><span class="where">expected output</span></div>
+<pre>make: Nothing to be done for 'all'.</pre></div>
+  </li>
+  <li id="c2-2">
+    <p>Change one source file. <code>touch</code> gives <code>src/tax.c</code> a new time stamp, as if you had edited and saved it.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>touch src/tax.c</pre></div>
+  </li>
+  <li id="c2-3">
+    <p>Build again. make compiles only <code>tax.c</code>, then redoes the steps that depend on it: the library, the link and the two kits. The 15 other sources are not compiled.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>make</pre></div>
+    <div class="cmd"><div class="bar"><span class="where">expected output (shortened; your Makefile's lines may look different)</span></div>
+<pre>xdecli 'cc/nolist/define=__USE_STD_IOSTREAM/object=[.src]tax.obj [.src]tax.c'
+xdecli 'library/create [.src]billing.olb [.src]*.obj'
+xdecli 'link/map=billing.map/executable=billing.exe main.obj,[.src]billing.olb/library'
+xdecli 'product package billing/source=billing.pcsi$desc/destination=[]/material=[]/format=sequential/options=noconfirm'
+rm -f 'DEMO-X86VMS-BILLING-V0100-0-1.PCSI$COMPRESSED'
+xdecli 'product copy billing/source=[]/destination=[]/format=compressed/options=noconfirm'</pre></div>
+    <figure><img src="img/c2-3-incremental.png" alt="Bash terminal: make after touch src/tax.c runs one cc command for tax.c, then library, link and the two product commands." width="948" height="864"></figure>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — in the output of step 3, exactly one <code>cc</code> command, for <code>tax.c</code>; a second <code>make</code> says <i>Nothing to be done</i> again.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="c3" aria-labelledby="h-c3">
+<h2 id="h-c3">C3 · Parallel builds</h2>
+<p class="lead">The 18 source files don't depend on each other, so make can compile them at the same time. Each <code>xdecli</code> call is its own OpenVMS process, and <code>-j6</code> lets make run up to six of them at once.</p>
+
+<ol class="steps">
+  <li id="c3-1">
+    <p>Delete the build output, so the next build is a full one, like <code>@build.com</code> in C0.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>make clean</pre></div>
+  </li>
+  <li id="c3-2">
+    <p>Build everything with six jobs. make prints each command when it starts it, so the first six compile commands appear together, before any output; the next ones start as soon as one finishes.</p>
+    <div class="cmd"><div class="bar"><span class="where">bash terminal</span><button type="button" data-copy>Copy</button></div>
+<pre>make -j6</pre></div>
+    <figure><img src="img/c3-2-parallel.png" alt="Bash terminal: make -j6 output with several xdecli cc commands printed one after another before their output." width="948" height="864"></figure>
+  </li>
+  <li id="c3-3">
+    <p><span class="opt">OPTIONAL</span>Watch the parallel jobs. In the <b>VMS/XDE</b> view click <b>htop</b>, then run <code>make clean</code> and <code>make -j6</code> again in the bash terminal: htop lists several VMS/XDE processes, one per running compile.</p>
+  </li>
+</ol>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — <code>make -j6</code> builds the PCSI kit <code>DEMO-X86VMS-BILLING-V0100-0-1.PCSI</code> and the compressed kit <code>DEMO-X86VMS-BILLING-V0100-0-1.PCSI$COMPRESSED</code>, and its output starts with several <code>cc</code> commands in a row: they run at the same time.</div>
+</section>
+
+<!-- ============================================================ -->
+<section id="final" aria-labelledby="h-final">
+<h2 id="h-final">Final · Compare with the reference</h2>
+<p class="lead">The Makefile below is the instructors' reference. Compare it with the one Claude wrote for you: the rules can be named or ordered differently, but the ideas are the same.</p>
+
+<div class="cmd"><div class="bar"><span class="where">file · billing/Makefile (reference)</span><button type="button" data-copy>Copy</button></div>
+<pre># Makefile - build the BILLING demo for OpenVMS from Linux.
+#
+# Every VMS step (compile, library, link, PCSI) is run by xdecli.
+#
+#   make          build everything up to the PCSI kits
+#   make -j6      the same, compiling 6 files in parallel
+#   make run      run BILLING.EXE
+#   make clean    delete all build output (runs clean.com)
+
+XDECLI = xdecli
+CCOPT  = /nolist/define=__USE_STD_IOSTREAM
+
+SRCS = $(wildcard src/*.c)
+MARS = $(wildcard src/*.mar)
+COBS = $(wildcard src/*.cob)
+OBJS = $(SRCS:.c=.obj) $(MARS:.mar=.obj) $(COBS:.cob=.obj)
+KIT  = DEMO-X86VMS-BILLING-V0100-0-1.PCSI
+KITC = $(KIT)$$COMPRESSED
+
+.PHONY: all run clean
+
+all: $(KITC)
+
+# 1. Compile each library source: src/&lt;name&gt;.c -&gt; src/&lt;name&gt;.obj
+src/%.obj: src/%.c src/billing.h
+	$(XDECLI) 'cc$(CCOPT)/object=[.src]$*.obj [.src]$*.c'
+
+# 1a. Assemble each MACRO-32 source: src/&lt;name&gt;.mar -&gt; src/&lt;name&gt;.obj
+src/%.obj: src/%.mar
+	$(XDECLI) 'macro/object=[.src]$*.obj [.src]$*.mar'
+
+# 1b. Compile each COBOL source: src/&lt;name&gt;.cob -&gt; src/&lt;name&gt;.obj
+src/%.obj: src/%.cob
+	$(XDECLI) 'cobol/object=[.src]$*.obj [.src]$*.cob'
+
+# 2. Create the object library
+src/billing.olb: $(OBJS)
+	$(XDECLI) 'library/create [.src]billing.olb [.src]*.obj'
+
+# 3. Compile the main program
+main.obj: main.c src/billing.h
+	$(XDECLI) 'cc$(CCOPT)/include=[.src]/object=main.obj main.c'
+
+# 4. Link the executable
+billing.exe: main.obj src/billing.olb
+	$(XDECLI) 'link/map=billing.map/executable=billing.exe main.obj,[.src]billing.olb/library'
+
+# 5. Create the PCSI kit
+$(KIT): billing.exe billing.pcsi$$desc billing.pcsi$$text
+	$(XDECLI) 'product package billing/source=billing.pcsi$$desc/destination=[]/material=[]/format=sequential/options=noconfirm'
+
+# 6. Create the compressed PCSI kit (delete the old one first, otherwise
+#    PRODUCT COPY takes it as the source instead of the new kit)
+$(KITC): $(KIT)
+	rm -f '$(KITC)'
+	$(XDECLI) 'product copy billing/source=[]/destination=[]/format=compressed/options=noconfirm'
+
+run: billing.exe
+	$(XDECLI) 'run billing.exe'
+
+clean:
+	$(XDECLI) '@clean.com'</pre></div>
+
+<table class="facts">
+  <tr><th>In the Makefile</th><th>Why</th></tr>
+  <tr><td><code>src/%.obj: src/%.c …</code></td><td>One rule, one <code>xdecli</code> call per object file. make can rebuild a single file and run several of these rules at once; <code>build.com</code> compiles everything in one process.</td></tr>
+  <tr><td>Three <code>src/%.obj</code> rules: <code>.c</code>, <code>.mar</code>, <code>.cob</code></td><td>One per language: <code>CC</code>, <code>MACRO</code> or <code>COBOL</code>. For each object file make uses the rule whose source file exists.</td></tr>
+  <tr><td><code>/object=[.src]$*.obj</code></td><td>The object file gets the lower-case name that make looks for on Linux. Without it, the compiler names it <code>.OBJ</code>.</td></tr>
+  <tr><td><code>[.src]</code> in the commands, <code>src/</code> in the rules</td><td>The rules are for make on Linux; the commands are DCL and use OpenVMS directory syntax.</td></tr>
+  <tr><td><code>$$</code></td><td>make reads <code>$</code> itself, so a DCL <code>$</code> (as in <code>billing.pcsi$desc</code>) is written <code>$$</code>.</td></tr>
+  <tr><td><code>rm -f</code> before <code>product copy</code></td><td>Taken over from <code>build.com</code>: <code>PRODUCT COPY</code> would use an old compressed kit as its source.</td></tr>
+</table>
+
+<h3>Wrap-up</h3>
+<p>You built an existing OpenVMS project from Linux without changing it: GNU make decides what is out of date, and <code>xdecli</code> runs each step on OpenVMS. Independent files are compiled at the same time, and a change to one file costs one compile. The same works at your own site with VMS/XDE: the Makefile uses only GNU make, <code>xdecli</code> and the project's own DCL commands.</p>
+
+<div class="check"><span class="t">✓ Checkpoint</span> — you can explain why <code>make -j6</code> after a <code>touch</code> of one file compiles exactly one file, and why <code>make -j6</code> can compile several files at once while <code>build.com</code> cannot.</div>
+</section>
+</main>
+</div>
+<script>
+document.querySelectorAll('button[data-copy]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var text = btn.closest('.cmd').querySelector('pre').innerText;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { selectPre(btn); });
+    } else { selectPre(btn); }
+  });
+});
+function selectPre(btn) {
+  var r = document.createRange(); r.selectNodeContents(btn.closest('.cmd').querySelector('pre'));
+  var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+</script>
+</body>
+</html>
