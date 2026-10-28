@@ -1,8 +1,7 @@
-# x86 Porting and Modernizing Workshop 2026
+# OpenVMS Development Reimagined: From Alpha to x86 in 4 hours with XDE and AI
 
-Participant guides for the x86 Porting and Modernizing Workshop: OpenVMS
-x86-64 on VMS/XDE, VS Code in the browser and Claude Code, all in one local
-container.
+Participant guides for the 2026 workshop: OpenVMS x86-64 on VMS/XDE, VS Code
+in the browser and Claude Code, all in one local container.
 
 **Read them online:** https://vmssoftware.github.io/x86-ai-workshop-2026/
 
